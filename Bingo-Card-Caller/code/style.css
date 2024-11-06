@@ -1,0 +1,130 @@
+img {
+    height:100%;
+    width:100%;
+}
+
+body {
+    margin:0;
+    background-color:black;
+}
+
+.button {
+  background-color: #303738;
+  border: 0 solid #E5E7EB;;
+  box-sizing: border-box;
+  color: #ffffff;
+  display: flex;
+  font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1.75rem;
+  padding: .75rem 1.65rem;
+  text-align: center;
+  text-decoration: none #000000 solid;
+  text-decoration-thickness: auto;
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+  cursor: pointer;
+  transform: rotate(-2deg);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button:focus {
+  outline: 0;
+}
+
+.button:after {
+  content: '';
+  position: absolute;
+  border: 1px solid #858585;
+  bottom: 4px;
+  left: 4px;
+  width: calc(100% - 1px);
+  height: calc(100% - 1px);
+}
+
+.button:hover:after {
+  bottom: 2px;
+  left: 2px;
+}
+
+@media (min-width: 768px) {
+  .button {
+    padding: .75rem 3rem;
+    font-size: 1.25rem;
+  }
+}
+
+#table {
+    display: flex;
+    flex-wrap:wrap;
+}
+
+#tool-bar-spacer {
+    height:8vh;
+}
+
+#tool-bar {
+    background-color:orange;
+    position:fixed;
+    height:inherit;
+    width:100%;
+}
+
+#big-image-container {
+    background-color: chocolate;
+    position:fixed;
+    width:30vw;
+    height:auto;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    margin:50px;
+    border-radius:20px;
+    border-style:ridge groove;
+    padding:1%;
+    visibility: hidden;
+}
+
+#bingo-machine-container {
+    position:fixed;
+    max-width:33vw;
+    height:auto;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
+#bingo-machine {
+    border-radius:50px;
+}
+
+.bingo-machine-fadeIn {
+    animation: fadeIn 2s;
+}
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.bingo-machine-fadeOut {
+    animation: fadeOut 1s;
+}
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.table-card {
+    width:18vw;
+    margin:3px;
+    border-style:ridge groove;
+    border-radius:40px;
+    border-color:salmon;
+    background-color:white;
+}
+

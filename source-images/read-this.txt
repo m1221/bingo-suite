@@ -1,0 +1,1 @@
+This directory is for holding image files that need to be manipulated before being transferred to the "individual-icons" directory.
