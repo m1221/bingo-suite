@@ -10,6 +10,7 @@ parser.add_argument("-s", "--source", help="the path to the directory that conta
 parser.add_argument("-o", "--output", help="directory where png cards are saved to", default="./bingo-cards", type=str)
 parser.add_argument("-a", "--side_length", help="size of a bingo square, default = 60", default=60, type=int)
 parser.add_argument("-p", "--private", help="sets the image icon directory to '../private-source-images/individual-icons'; overrides '--source'.", action=argparse.BooleanOptionalAction)
+parser.add_argument("-w", "--words", help="writes words extracted from the image filenames onto the bottoms of the spaces", action=argparse.BooleanOptionalAction)
 
 if (parser.parse_args().private):
     image_dir = Path("../private-source-images/individual-icons")
@@ -17,6 +18,19 @@ else:
     image_dir = Path(parser.parse_args().source)
 
 pathnames = [pathname for pathname in image_dir.glob("[!.]*")]
+
+def getUserFriendlyName(img_path):
+    # '01_spider-web.png' => 'spider web'
+    temp = ' '.join(((img_path.name.split('_')[1]).split('.')[0]).split('-'))
+    apostrophe_pos = temp.rfind('aaa')
+    if apostrophe_pos != -1:
+        temp = temp[0:apostrophe_pos] + '\'' + temp[apostrophe_pos + 3]
+
+    hyphen_pos = temp.rfind('hhh')
+    if hyphen_pos != -1:
+        temp = temp[0:hyphen_pos] + '\'' + temp[hyphen_pos + 3]
+
+    return temp.upper()
 
 def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_length, line_thickness=2):
     # 1. Create a blank white image for the bingo card
@@ -32,10 +46,12 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
         font = ImageFont.truetype("/usr/share/fonts/truetype/lyx/dsrom10.ttf", int(side_length / 50) * 10)
         header_font = ImageFont.truetype("/usr/share/fonts/truetype/lyx/dsrom10.ttf", int(side_length / 25) * 10)
         footer_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf", 10)
+        space_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", int(side_length / 50) * 7)
     except IOError:
         font = ImageFont.load_default()
         header_font = ImageFont.load_default()
         footer_font = ImageFont.load_default()
+        space_font = ImageFont.load_default()
 
     # 3. Draw the Serial Number in the footer
     serial_number = str(id).zfill(3)
@@ -68,6 +84,14 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
 
                 # Create a mask for pasting
                 card.paste(img, (x, y), img)  # Use img as the mask to preserve transparency
+
+                # write text to the space
+                if (parser.parse_args().words):
+                    text = getUserFriendlyName(img_path)
+                    text_size = draw.textsize(text, font=space_font)
+                    x_pos = x + (side_length - text_size[0]) // 2
+                    y_pos = y + (side_length - text_size[1]) * 7 // 8
+                    draw.text((x_pos, y_pos), text, fill='black', font=space_font)
 
     # 6. Draw grid lines
     for i in range(6):  # 6 lines for 5 squares
