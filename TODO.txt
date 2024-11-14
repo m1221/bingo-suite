@@ -1,0 +1,19 @@
+In no order of priority:
+1. make more user-friendly 
+	- establish pre-defined formats for card printouts
+	- make a script that makes cards and pdfs
+2. add spreadsheet for odds calculation
+3. add code documentation
+4. add a thorough readme for usage instructions
+5. for Bingo Card Caller:
+	i. add Letter+Image mode
+		- currently there is just one mode, and it calls just images
+    	- e.g. "B-Witch"
+	ii. add Number mode
+	iii. add Letter+Number mode
+6. in ./make-cards.py, load fonts individually
+7. add 'help' to ./make-cards (separate from `python ./make-cards -h`)
+8. add letter ('BINGO') functionality to Bingo Card Maker
+	- currently, all columns share a single pool of numbers (once an image/number has been pulled, it cannot be used in other columns)
+	- by default, bingo should have duplicated pools of items for each column
+	- give user the option to choose between default bingo and 'single-pool' bingo
