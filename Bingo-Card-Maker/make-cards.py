@@ -20,6 +20,11 @@ else:
 
 pathnames = [pathname for pathname in image_dir.glob("[!.]*")]
 
+def __loadFont__(dir, font_size):
+    try:
+        return ImageFont.truetype(dir, font_size)
+    except:
+        return ImageFont.load_default()
 
 # utility fn
 def getNumbersFromRange(number_range):
@@ -58,18 +63,13 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
     draw = ImageDraw.Draw(card)
 
     # 2. load fonts
-    try:
-        font = ImageFont.truetype("/usr/share/fonts/truetype/lyx/dsrom10.ttf", int(side_length / 50) * 10)
-        header_font = ImageFont.truetype("/usr/share/fonts/truetype/lyx/dsrom10.ttf", int(side_length / 25) * 10)
-        footer_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf", 10)
-        number_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", int(side_length / 50) * 22)
-        space_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", int(side_length / 50) * 7)
-    except IOError:
-        font = ImageFont.load_default()
-        header_font = ImageFont.load_default()
-        footer_font = ImageFont.load_default()
-        number_font = ImageFont.load_default()
-        space_font = ImageFont.load_default()
+    size_mod = int(side_length / 50)
+    font_prefix = "/usr/share/fonts/truetype/"
+    font = __loadFont__(font_prefix + "lyx/dsrom10.ttf", size_mod * 10)
+    header_font = __loadFont__(font_prefix + "lyx/dsrom10.ttf", size_mod * 20)
+    footer_font = __loadFont__(font_prefix + "dejavu/DejaVuSerif.ttf", 10)
+    number_font = __loadFont__(font_prefix + "dejavu/DejaVuSans.ttf", size_mod * 22)
+    space_font = __loadFont__(font_prefix + "dejavu/DejaVuSans.ttf", size_mod * 10)
 
     # 3. Draw the Serial Number in the footer
     serial_number = str(id).zfill(3)

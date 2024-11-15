@@ -11,9 +11,8 @@ In no order of priority:
     	- e.g. "B-Witch"
 	ii. add Number mode
 	iii. add Letter+Number mode
-6. in ./make-cards.py, load fonts individually
-7. add 'help' to ./make-cards (separate from `python ./make-cards -h`)
-8. add letter ('BINGO') functionality to Bingo Card Maker
+6. add 'help' to ./make-cards (separate from `python ./make-cards -h`)
+7. add letter ('BINGO') functionality to Bingo Card Maker
 	- currently, all columns share a single pool of numbers (once an image/number has been pulled, it cannot be used in other columns)
 	- by default, bingo should have duplicated pools of items for each column
 	- give user the option to choose between default bingo and 'single-pool' bingo
