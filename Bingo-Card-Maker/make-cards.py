@@ -6,6 +6,7 @@ from pathlib import Path
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-q", "--quantity", help="the number of cards to generate", default=4, type=int)
+parser.add_argument("-u", "--unique", help="if set, items are pulled from a single pool, as opposed to pools for each letter of 'BINGO'", action=argparse.BooleanOptionalAction)
 parser.add_argument("-s", "--source", help="the path to the directory that contains the image icons to be displayed on the bingo cards", default="../source-images/individual-icons", type=str)
 parser.add_argument("-o", "--output", help="directory where png cards are saved to", default="./bingo-cards", type=str)
 parser.add_argument("-a", "--side_length", help="size of a bingo square, default = 60", default=60, type=int)
@@ -77,12 +78,39 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
         x = i * side_length + (side_length - draw.textsize(letter, font=header_font)[0]) // 2
         draw.text((x, 2), letter, fill='black', font=header_font)
 
-    # 5. draw the images OR  numbers
+    # 5. draw the images OR numbers
     number_range = parser.parse_args().numbers
-    if number_range == "unset":
-        selected_images = random.sample(image_pathnames, 24)  # 25 total minus 1 free space
-    else:
-        selected_numbers = random.sample(getNumbersFromRange(number_range), 24)
+
+    # 5.A check if should use one pool
+    if parser.parse_args().unique:
+        if number_range == "unset":
+            selected_images = random.sample(image_pathnames, 24)  # 25 total minus 1 free space
+        else:
+            selected_numbers = random.sample(getNumbersFromRange(number_range), 24)
+    else: #5.B use multiple pools
+        # TODO: make code for multiple pools more intuitive and easier to read
+        bingo = {}
+        if number_range == "unset":
+            for i in range(5):
+                bingo[i] = random.sample(image_pathnames, 5)
+
+            selected_images = [] * 24
+            for k in range(25):
+                if k == 12:
+                    continue
+                source_index = k % 5
+                selected_images.insert(k, bingo[source_index].pop())
+        else:
+            numbers = getNumbersFromRange(number_range)
+            for i in range(5):
+                bingo[i] = random.sample(numbers, 5)
+
+            selected_numbers = [0] * 24
+            for k in range(25):
+                if k == 12:
+                    continue
+                source_index = k % 5
+                selected_numbers.insert(k, bingo[source_index].pop())
 
     for i in range(5):
         for j in range(5):
