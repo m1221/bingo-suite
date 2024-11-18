@@ -9,14 +9,10 @@ parser.add_argument("-q", "--quantity", help="the number of cards to generate", 
 parser.add_argument("-s", "--source", help="the path to the directory that contains the image icons to be displayed on the bingo cards", default="../source-images/individual-icons", type=str)
 parser.add_argument("-o", "--output", help="directory where png cards are saved to", default="./bingo-cards", type=str)
 parser.add_argument("-a", "--side_length", help="size of a bingo square, default = 60", default=60, type=int)
-parser.add_argument("-p", "--private", help="sets the image icon directory to '../private-source-images/individual-icons'; overrides '--source'.", action=argparse.BooleanOptionalAction)
 parser.add_argument("-w", "--words", help="writes words extracted from the image filenames onto the bottoms of the spaces", action=argparse.BooleanOptionalAction)
 parser.add_argument("-n", "--numbers", help="if set, uses numbers instead of images; enter the range, eg `-n 1-50`", default="unset", type=str)
 
-if (parser.parse_args().private):
-    image_dir = Path("../private-source-images/individual-icons")
-else:
-    image_dir = Path(parser.parse_args().source)
+image_dir = Path(parser.parse_args().source)
 
 pathnames = [pathname for pathname in image_dir.glob("[!.]*")]
 
