@@ -11,11 +11,7 @@ parser.add_argument("-s", "--source", help="the path to the directory that conta
 parser.add_argument("-o", "--output", help="directory where png cards are saved to", default="./bingo-cards", type=str)
 parser.add_argument("-a", "--side_length", help="size of a bingo square, default = 60", default=60, type=int)
 parser.add_argument("-w", "--words", help="writes words extracted from the image filenames onto the bottoms of the spaces", action=argparse.BooleanOptionalAction)
-parser.add_argument("-n", "--numbers", help="if set, uses numbers instead of images; enter the range, eg `-n 1-50`", default="unset", type=str)
-
-image_dir = Path(parser.parse_args().source)
-
-pathnames = [pathname for pathname in image_dir.glob("[!.]*")]
+parser.add_argument("-n", "--number_range", help="if set, uses numbers instead of images; enter the range, eg `-n 1-50`", default="unset", type=str)
 
 def __loadFont__(dir, font_size):
     try:
@@ -24,7 +20,7 @@ def __loadFont__(dir, font_size):
         return ImageFont.load_default()
 
 # utility fn
-def getNumbersFromRange(number_range):
+def __getNumberListFromUserInput__(number_range):
     try:
         a, b = number_range.split('-')
         a = int(a)
@@ -37,7 +33,7 @@ def getNumbersFromRange(number_range):
         exit()
 
 # utility fn
-def getUserFriendlyName(img_path):
+def __getDisplayName__(img_path):
     # '01_spider-web.png' => 'spider web'
     temp = ' '.join(((img_path.name.split('_')[1]).split('.')[0]).split('-'))
     apostrophe_pos = temp.rfind('aaa')
@@ -50,7 +46,7 @@ def getUserFriendlyName(img_path):
 
     return temp.upper()
 
-def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_length, line_thickness=2):
+def makeBingoCard(id, side_length=parser.parse_args().side_length, line_thickness=2):
     # 1. Create a blank white image for the bingo card
     header_spacing = 20
     footer_spacing = 15
@@ -79,14 +75,14 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
         draw.text((x, 2), letter, fill='black', font=header_font)
 
     # 5. draw the images OR numbers
-    number_range = parser.parse_args().numbers
+    number_range = parser.parse_args().number_range
 
     # 5.A check if should use one pool
     if parser.parse_args().unique:
         if number_range == "unset":
             selected_images = random.sample(image_pathnames, 24)  # 25 total minus 1 free space
         else:
-            selected_numbers = random.sample(getNumbersFromRange(number_range), 24)
+            selected_numbers = random.sample(__getNumberListFromUserInput__(number_range), 24)
     else: #5.B use multiple pools
         # TODO: make code for multiple pools more intuitive and easier to read
         bingo = {}
@@ -101,7 +97,7 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
                 source_index = k % 5
                 selected_images.insert(k, bingo[source_index].pop())
         else:
-            numbers = getNumbersFromRange(number_range)
+            numbers = __getNumberListFromUserInput__(number_range)
             for i in range(5):
                 bingo[i] = random.sample(numbers, 5)
 
@@ -134,7 +130,7 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
 
                     # write descriptive text to the space
                     if (parser.parse_args().words):
-                        text = getUserFriendlyName(img_path)
+                        text = __getDisplayName__(img_path)
                         text_size = draw.textsize(text, font=space_font)
                         x_pos = x + (side_length - text_size[0]) // 2
                         y_pos = y + (side_length - text_size[1]) * 7 // 8
@@ -159,5 +155,9 @@ def makeBingoCard(image_pathnames, id, side_length=parser.parse_args().side_leng
     # 7. Save the bingo card to a file
     card.save(f'{parser.parse_args().output}/{serial_number}_bingo-card.png', 'PNG')
 
+if parser.parse_args().number_range == 'unset':
+    image_dir = Path(parser.parse_args().source)
+    image_pathnames = [pathname for pathname in image_dir.glob("[!.]*")]
+
 for id in range(1, parser.parse_args().quantity + 1):
-    makeBingoCard(pathnames, id)
+    makeBingoCard(id)
