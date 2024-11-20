@@ -12,5 +12,3 @@ In no order of priority:
 	ii. add Number mode
 	iii. add Letter+Number mode
 6. add 'help' to ./make-cards (separate from `python ./make-cards -h`)
-7. refactor code for letter ('BINGO') functionality more intuitive and readable
-	what is letter functionality? each letter of BINGO has its own pool
