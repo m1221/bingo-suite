@@ -132,11 +132,11 @@ function updateTableDisplay(){
     // TODO: is using 'visible/hidden' the best way?
     // what about ... using position?
     if (pool_selection == "multiple-pool") {
-        table_multi.style.visibility = "visible";
-        table_single.style.visibility = "hidden";
+        table_multi.style.display = "block";
+        table_single.style.display = "none";
     }
     else if (pool_selection == "single-pool") {
-        table_multi.style.visibility = "hidden";
-        table_single.style.visibility = "visible";
+        table_multi.style.display = "none";
+        table_single.style.display = "flex";
     }
 }

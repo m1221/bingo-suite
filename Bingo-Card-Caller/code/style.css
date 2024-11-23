@@ -10,6 +10,9 @@ body {
 
 .table-row {
     color: white;
+    display: flex;
+    height: 18vh;
+    align-items: center;
 }
 
 #new-card-button {
@@ -63,9 +66,9 @@ body {
   }
 }
 
-#table-unique {
+#table-single {
     display: flex;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
 }
 
 #tool-bar-spacer {
@@ -125,7 +128,8 @@ body {
 }
 
 .table-card {
-    width:18vw;
+    height: 14vh;
+    width: auto;
     margin:3px;
     border-style:ridge groove;
     border-radius:40px;
@@ -133,3 +137,7 @@ body {
     background-color:white;
 }
 
+.row-header {
+    font-size: 10vh;
+    width: 8vw;
+}
