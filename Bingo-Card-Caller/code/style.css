@@ -8,7 +8,11 @@ body {
     background-color:black;
 }
 
-.button {
+.table-row {
+    color: white;
+}
+
+#new-card-button {
   background-color: #303738;
   border: 0 solid #E5E7EB;;
   box-sizing: border-box;
@@ -33,11 +37,11 @@ body {
   touch-action: manipulation;
 }
 
-.button:focus {
+#new-card-button:focus {
   outline: 0;
 }
 
-.button:after {
+#new-card-button:after {
   content: '';
   position: absolute;
   border: 1px solid #858585;
@@ -47,7 +51,7 @@ body {
   height: calc(100% - 1px);
 }
 
-.button:hover:after {
+#new-card-button:hover:after {
   bottom: 2px;
   left: 2px;
 }
@@ -59,7 +63,7 @@ body {
   }
 }
 
-#table {
+#table-unique {
     display: flex;
     flex-wrap:wrap;
 }
@@ -73,6 +77,7 @@ body {
     position:fixed;
     height:inherit;
     width:100%;
+    display: flex;
 }
 
 #big-image-container {

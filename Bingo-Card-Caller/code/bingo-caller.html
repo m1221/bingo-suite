@@ -9,10 +9,18 @@
   <body>
   <div id="tool-bar-spacer">
     <div id="tool-bar">
-      <button class="button" onclick="activateBingoMachine()">New Card</button>
+      <button id="new-card-button" onclick="activateBingoMachine()">New Card</button>
+      <button id="toggle-game-mode-button" onclick="toggleGameMode()">Toggle Mode</button>
     </div>
   </div>
-  <div id="table"></div>
+  <div id="table-single"></div>
+  <div id="table-multi">
+    <div class="table-row" id="row-B"><div class="row-header">B</div></div>
+    <div class="table-row" id="row-I"><div class="row-header">I</div></div>
+    <div class="table-row" id="row-N"><div class="row-header">N</div></div>
+    <div class="table-row" id="row-G"><div class="row-header">G</div></div>
+    <div class="table-row" id="row-O"><div class="row-header">O</div></div>
+  </div>
   <div id="big-image-container"></div>
   <div id="bingo-machine-container">
     <img id="bingo-machine">

@@ -1,14 +1,16 @@
-const button = document.getElementsByClassName("button")[0];
-const table = document.getElementById("table");
+const new_card_button = document.getElementById("new-card-button");
+const table_single = document.getElementById("table-single");
+const table_multi = document.getElementById("table-multi");
 const bingo_machine_anim = document.getElementById("bingo-machine");
 const bingo_machine_container = document.getElementById("bingo-machine-container");
 const big_image_container = document.getElementById("big-image-container");
+let pool_selection = "multiple-pool"; // multi-pool vs single-pool
 let button_click_sound = new Audio("../audio/click.wav");
 let rolling_sound = new Audio("../audio/rolling-sound.wav")
 let clang_sound_01 = new Audio("../audio/clang-01.wav");
 let clang_sound_02 = new Audio("../audio/clang-02.wav");
-let button_enabled = false;
-bingo_ball_machine_filepath = "../image/bingo-ball-machine.gif";
+let new_card_button_enabled = false;
+let bingo_ball_machine_filepath = "../image/bingo-ball-machine.gif";
 
 
 // check for valid BingoMachineImage
@@ -16,7 +18,7 @@ let bingoMachineIMGvalid = false;
 let test_image = document.createElement("img");
 test_image.src = bingo_ball_machine_filepath;
 setTimeout(function(){
-    button_enabled = true;
+    new_card_button_enabled = true;
     if (test_image.naturalHeight > 0){
         bingoMachineIMGvalid = true;
     }
@@ -24,11 +26,21 @@ setTimeout(function(){
 
 
 function activateBingoMachine(){
-    if (button_enabled == false) return;
-    button_enabled = false;
-    button.style.color = "#000000";
+    if (new_card_button_enabled == false) return;
+    new_card_button_enabled = false;
+    new_card_button.style.color = "#000000";
     button_click_sound.play();
-    let new_card = popRandom(pool);
+    let pool_id = null;
+    let new_card;
+    if (pool_selection == "multiple-pool")
+    {
+        pool_id = "BINGO"[Math.floor(Math.random() * 5)];
+        let random_pool = pools[pool_id];
+        new_card = popRandom(random_pool);
+    } else if ( pool_selection == "single-pool"){
+        new_card = popRandom(pool);
+    }
+    
 
     let bingo_machine_time = 0;
     if (bingoMachineIMGvalid){
@@ -45,22 +57,29 @@ function activateBingoMachine(){
     }
     
     setTimeout(function(){
-        addCardToTable(new_card);
+        addCardToTable(pool_id, new_card);
         hideBigCard();
-        button_enabled = true;
-        button.style.color = "#ffffff";
+        new_card_button_enabled = true;
+        new_card_button.style.color = "#ffffff";
     }, bingo_machine_time + 4000);
 
 }
 
-function addCardToTable(card_name){
+function addCardToTable(pool_id, card_name){
     let card = document.createElement("div");
     card.className = "table-card";
     let card_image = document.createElement("img");
     card_image.src = pathmap[card_name];
 
     card.appendChild(card_image);
-    table.appendChild(card);
+    
+    if (pool_selection == "single-pool"){
+        table_single.appendChild(card);
+    }
+    else if (pool_selection == "multiple-pool"){
+        document.getElementById(`row-${pool_id}`).appendChild(card);
+    }
+    
 }
 
 /* BingoMachineAnim - BEGIN */
@@ -102,4 +121,22 @@ function displayBigCard(card_name){
 
 function hideBigCard(){
     big_image_container.style.visibility = "hidden";
+}
+
+function toggleGameMode(){
+    pool_selection = (pool_selection == "multiple-pool") ? "single-pool" : "multiple-pool";
+    updateTableDisplay();
+}
+
+function updateTableDisplay(){
+    // TODO: is using 'visible/hidden' the best way?
+    // what about ... using position?
+    if (pool_selection == "multiple-pool") {
+        table_multi.style.visibility = "visible";
+        table_single.style.visibility = "hidden";
+    }
+    else if (pool_selection == "single-pool") {
+        table_multi.style.visibility = "hidden";
+        table_single.style.visibility = "visible";
+    }
 }
