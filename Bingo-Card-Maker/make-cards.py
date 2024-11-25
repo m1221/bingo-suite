@@ -6,7 +6,7 @@ from pathlib import Path
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-q", "--quantity", help="the number of cards to generate", default=4, type=int)
-parser.add_argument("-u", "--unique", help="if set, items are pulled from a single pool, as opposed to pools for each letter of 'BINGO'", action=argparse.BooleanOptionalAction)
+parser.add_argument("-S", "--single-pool", help="if set, items are pulled from a single pool, instead of pools for each letter of 'BINGO'", action=argparse.BooleanOptionalAction)
 parser.add_argument("-s", "--source", help="the path to the directory that contains the image icons to be displayed on the bingo cards", default="../source-images/individual-icons", type=str)
 parser.add_argument("-o", "--output", help="directory where png cards are saved to", default="./bingo-cards", type=str)
 parser.add_argument("-a", "--side_length", help="size of a bingo square, default = 60", default=60, type=int)
@@ -78,7 +78,7 @@ def makeBingoCard(id, side_length=parser.parse_args().side_length, line_thicknes
     number_range = parser.parse_args().number_range
 
     # 5.A check if should use one pool
-    if parser.parse_args().unique:
+    if parser.parse_args().single_pool:
         if number_range:
             selection_pool = random.sample(__getNumberListFromUserInput__(number_range), 25)
         else:
