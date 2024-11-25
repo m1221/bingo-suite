@@ -12,7 +12,9 @@ let clangSound_02 = new Audio("../audio/clang-02.wav");
 let bButtonsEnabled = false;
 let bAnimEnabled = true;
 let bBingoMachineIMGValid = false;
+let bShowCardText = false;
 let animFilepath = "../image/bingo-ball-machine.gif";
+let drawnCardTexts = [];
 
 // check for valid BingoMachineImage
 let testImage = document.createElement("img");
@@ -52,11 +54,11 @@ function activateBingoMachine(){
         playBingoMachineAudio();
         setTimeout(function(){ FadeOutBingoMachine(); }, 6000);
         setTimeout(function(){ bingoMachineAnim.src = ""; }, 7000);
-        setTimeout(function(){ displayBigCard(new_card)}, bingo_machine_time + 1200);
+        setTimeout(function(){ displayBigCard(new_card, pool_id)}, bingo_machine_time + 1200);
     }
     else {
         bingo_machine_time = -1500;
-        displayBigCard(new_card);
+        displayBigCard(new_card, pool_id);
     }
     
     // 3. update table and reset 
@@ -74,8 +76,14 @@ function addCardToTable(pool_id, card_name){
     card.className = "table-card";
     let card_image = document.createElement("img");
     card_image.src = pathmap[card_name];
+    let card_text = document.createElement("div");
+    card_text.textContent = card_name;
+    card_text.className = "card-text";
+    card_text.style.visibility = bShowCardText ? "visible" : "hidden";
 
     card.appendChild(card_image);
+    card.appendChild(card_text);
+    drawnCardTexts.push(card_text);
     
     if (poolSelection == "single-pool"){
         tableSingle.appendChild(card);
@@ -110,16 +118,26 @@ function playBingoMachineAudio(){
     
 }
 
-function displayBigCard(card_name){
+function displayBigCard(card_name, pool_id){
     if (bigImageContainer.hasChildNodes()){
-        bigImageContainer.removeChild(bigImageContainer.firstChild);
+        bigImageContainer.innerHTML = "";
     }
     
     bigImageContainer.style.visibility = "visible";
     let bigCardImage = document.createElement("img");
     bigCardImage.src = pathmap[card_name];
+    let bigCardText = document.createElement("div");
+    bigCardText.textContent = card_name;
+    bigCardText.className = "card-text"; 
+    bigCardText.style.fontSize = "5vh";
+    let bigCardPoolID = document.createElement("div");
+    bigCardPoolID.className = "pool-id-text";
+    bigCardPoolID.textContent = pool_id;
+    bigCardPoolID.style.fontSize = "10vh";
 
     bigImageContainer.appendChild(bigCardImage);
+    bigImageContainer.appendChild(bigCardText);
+    bigImageContainer.appendChild(bigCardPoolID);
 }
 
 function hideBigCard(){
@@ -145,5 +163,14 @@ function updateTableDisplay(){
     else if (poolSelection == "single-pool") {
         tableMulti.style.display = "none";
         tableSingle.style.display = "flex";
+    }
+}
+
+function toggleCardText(){
+    if (! bButtonsEnabled) return;
+    bShowCardText = bShowCardText ? false : true;
+    let textVisibility = bShowCardText ?  "visible" : "hidden";
+    for (cardText of drawnCardTexts) {
+        cardText.style.visibility = textVisibility;
     }
 }
