@@ -9,7 +9,7 @@ let button_click_sound = new Audio("../audio/click.wav");
 let rolling_sound = new Audio("../audio/rolling-sound.wav")
 let clang_sound_01 = new Audio("../audio/clang-01.wav");
 let clang_sound_02 = new Audio("../audio/clang-02.wav");
-let new_card_button_enabled = false;
+let buttons_enabled = false;
 let bingo_ball_machine_filepath = "../image/bingo-ball-machine.gif";
 
 
@@ -18,7 +18,7 @@ let bingoMachineIMGvalid = false;
 let test_image = document.createElement("img");
 test_image.src = bingo_ball_machine_filepath;
 setTimeout(function(){
-    new_card_button_enabled = true;
+    buttons_enabled = true;
     if (test_image.naturalHeight > 0){
         bingoMachineIMGvalid = true;
     }
@@ -26,8 +26,8 @@ setTimeout(function(){
 
 
 function activateBingoMachine(){
-    if (new_card_button_enabled == false) return;
-    new_card_button_enabled = false;
+    if (buttons_enabled == false) return;
+    buttons_enabled = false;
     new_card_button.style.color = "#000000";
     button_click_sound.play();
     let pool_id = null;
@@ -59,7 +59,7 @@ function activateBingoMachine(){
     setTimeout(function(){
         addCardToTable(pool_id, new_card);
         hideBigCard();
-        new_card_button_enabled = true;
+        buttons_enabled = true;
         new_card_button.style.color = "#ffffff";
     }, bingo_machine_time + 4000);
 
@@ -124,6 +124,7 @@ function hideBigCard(){
 }
 
 function toggleGameMode(){
+    if (! buttons_enabled) return;
     pool_selection = (pool_selection == "multiple-pool") ? "single-pool" : "multiple-pool";
     updateTableDisplay();
 }
