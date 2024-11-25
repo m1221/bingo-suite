@@ -10,6 +10,7 @@ let rolling_sound = new Audio("../audio/rolling-sound.wav")
 let clang_sound_01 = new Audio("../audio/clang-01.wav");
 let clang_sound_02 = new Audio("../audio/clang-02.wav");
 let buttons_enabled = false;
+let anim_enabled = true;
 let bingo_ball_machine_filepath = "../image/bingo-ball-machine.gif";
 
 
@@ -27,9 +28,12 @@ setTimeout(function(){
 
 function activateBingoMachine(){
     if (buttons_enabled == false) return;
+    // 0. disable ALL buttons
     buttons_enabled = false;
     new_card_button.style.color = "#000000";
     button_click_sound.play();
+
+    // 1. get new card from pool
     let pool_id = null;
     let new_card;
     if (pool_selection == "multiple-pool")
@@ -41,9 +45,9 @@ function activateBingoMachine(){
         new_card = popRandom(pool);
     }
     
-
+    // 2. show card (and possible bingo machine anim)
     let bingo_machine_time = 0;
-    if (bingoMachineIMGvalid){
+    if (anim_enabled && bingoMachineIMGvalid) {
         bingo_machine_time = 6000;
         playBingoMachineAnim();
         playBingoMachineAudio();
@@ -56,6 +60,7 @@ function activateBingoMachine(){
         displayBigCard(new_card);
     }
     
+    // 3. update table and reset 
     setTimeout(function(){
         addCardToTable(pool_id, new_card);
         hideBigCard();
@@ -127,6 +132,11 @@ function toggleGameMode(){
     if (! buttons_enabled) return;
     pool_selection = (pool_selection == "multiple-pool") ? "single-pool" : "multiple-pool";
     updateTableDisplay();
+}
+
+function togglePlayAnim(){
+    if (! buttons_enabled) return;
+    anim_enabled = (anim_enabled == false) ? true : false;
 }
 
 function updateTableDisplay(){
