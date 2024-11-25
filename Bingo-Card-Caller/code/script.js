@@ -1,58 +1,57 @@
-const new_card_button = document.getElementById("new-card-button");
-const table_single = document.getElementById("table-single");
-const table_multi = document.getElementById("table-multi");
-const bingo_machine_anim = document.getElementById("bingo-machine");
-const bingo_machine_container = document.getElementById("bingo-machine-container");
-const big_image_container = document.getElementById("big-image-container");
-let pool_selection = "multiple-pool"; // multi-pool vs single-pool
-let button_click_sound = new Audio("../audio/click.wav");
-let rolling_sound = new Audio("../audio/rolling-sound.wav")
-let clang_sound_01 = new Audio("../audio/clang-01.wav");
-let clang_sound_02 = new Audio("../audio/clang-02.wav");
-let buttons_enabled = false;
-let anim_enabled = true;
-let bingo_ball_machine_filepath = "../image/bingo-ball-machine.gif";
-
+const newCardButton = document.getElementById("new-card-button");
+const tableSingle = document.getElementById("table-single");
+const tableMulti = document.getElementById("table-multi");
+const bingoMachineAnim = document.getElementById("bingo-machine");
+const bingoMachineContainer = document.getElementById("bingo-machine-container");
+const bigImageContainer = document.getElementById("big-image-container");
+let poolSelection = "multiple-pool"; // multi-pool vs single-pool
+let buttonClickSound = new Audio("../audio/click.wav");
+let rollingSound = new Audio("../audio/rolling-sound.wav")
+let clangSound_01 = new Audio("../audio/clang-01.wav");
+let clangSound_02 = new Audio("../audio/clang-02.wav");
+let bButtonsEnabled = false;
+let bAnimEnabled = true;
+let bBingoMachineIMGValid = false;
+let animFilepath = "../image/bingo-ball-machine.gif";
 
 // check for valid BingoMachineImage
-let bingoMachineIMGvalid = false;
-let test_image = document.createElement("img");
-test_image.src = bingo_ball_machine_filepath;
+let testImage = document.createElement("img");
+testImage.src = animFilepath;
 setTimeout(function(){
-    buttons_enabled = true;
-    if (test_image.naturalHeight > 0){
-        bingoMachineIMGvalid = true;
+    bButtonsEnabled = true;
+    if (testImage.naturalHeight > 0){
+        bBingoMachineIMGValid = true;
     }
 }, 200);
 
 
 function activateBingoMachine(){
-    if (buttons_enabled == false) return;
+    if (bButtonsEnabled == false) return;
     // 0. disable ALL buttons
-    buttons_enabled = false;
-    new_card_button.style.color = "#000000";
-    button_click_sound.play();
+    bButtonsEnabled = false;
+    newCardButton.style.color = "#000000";
+    buttonClickSound.play();
 
     // 1. get new card from pool
     let pool_id = null;
     let new_card;
-    if (pool_selection == "multiple-pool")
+    if (poolSelection == "multiple-pool")
     {
         pool_id = "BINGO"[Math.floor(Math.random() * 5)];
         let random_pool = pools[pool_id];
         new_card = popRandom(random_pool);
-    } else if ( pool_selection == "single-pool"){
+    } else if ( poolSelection == "single-pool"){
         new_card = popRandom(pool);
     }
     
     // 2. show card (and possible bingo machine anim)
     let bingo_machine_time = 0;
-    if (anim_enabled && bingoMachineIMGvalid) {
+    if (bAnimEnabled && bBingoMachineIMGValid) {
         bingo_machine_time = 6000;
         playBingoMachineAnim();
         playBingoMachineAudio();
         setTimeout(function(){ FadeOutBingoMachine(); }, 6000);
-        setTimeout(function(){ bingo_machine_anim.src = ""; }, 7000);
+        setTimeout(function(){ bingoMachineAnim.src = ""; }, 7000);
         setTimeout(function(){ displayBigCard(new_card)}, bingo_machine_time + 1200);
     }
     else {
@@ -64,8 +63,8 @@ function activateBingoMachine(){
     setTimeout(function(){
         addCardToTable(pool_id, new_card);
         hideBigCard();
-        buttons_enabled = true;
-        new_card_button.style.color = "#ffffff";
+        bButtonsEnabled = true;
+        newCardButton.style.color = "#ffffff";
     }, bingo_machine_time + 4000);
 
 }
@@ -78,10 +77,10 @@ function addCardToTable(pool_id, card_name){
 
     card.appendChild(card_image);
     
-    if (pool_selection == "single-pool"){
-        table_single.appendChild(card);
+    if (poolSelection == "single-pool"){
+        tableSingle.appendChild(card);
     }
-    else if (pool_selection == "multiple-pool"){
+    else if (poolSelection == "multiple-pool"){
         document.getElementById(`row-${pool_id}`).appendChild(card);
     }
     
@@ -91,63 +90,60 @@ function addCardToTable(pool_id, card_name){
 function playBingoMachineAnim() {
     let timestamp = new Date().getTime();
     let queryString = "?t=" + timestamp; // use queryString to avoid cache reload
-    //bingo_machine_container
-    bingo_machine_container.classList.remove("bingo-machine-fadeOut");
-    bingo_machine_container.classList.add("bingo-machine-fadeIn");
-    bingo_machine_anim.src = "../image/bingo-ball-machine.gif" + queryString;
+    bingoMachineContainer.classList.remove("bingo-machine-fadeOut");
+    bingoMachineContainer.classList.add("bingo-machine-fadeIn");
+    bingoMachineAnim.src = "../image/bingo-ball-machine.gif" + queryString;
 }
 
 function FadeOutBingoMachine() {
-    bingo_machine_container.classList.remove("bingo-machine-fadeIn");
-    bingo_machine_container.classList.add("bingo-machine-fadeOut");
+    bingoMachineContainer.classList.remove("bingo-machine-fadeIn");
+    bingoMachineContainer.classList.add("bingo-machine-fadeOut");
 }
 /* BingoMachineAnim - END */
 
 function playBingoMachineAudio(){
-    setTimeout(function(){ rolling_sound.play(); }, 1000);
+    setTimeout(function(){ rollingSound.play(); }, 1000);
     setTimeout(function(){ 
-        let sound_to_play = Math.random() > 0.5 ? clang_sound_01 : clang_sound_02;
+        let sound_to_play = Math.random() > 0.5 ? clangSound_01 : clangSound_02;
         sound_to_play.play(); 
     }, 5500);
     
 }
 
 function displayBigCard(card_name){
-    if (big_image_container.hasChildNodes()){
-        big_image_container.removeChild(big_image_container.firstChild);
+    if (bigImageContainer.hasChildNodes()){
+        bigImageContainer.removeChild(bigImageContainer.firstChild);
     }
     
-    big_image_container.style.visibility = "visible";
-    let big_card_image = document.createElement("img");
-    big_card_image.src = pathmap[card_name];
+    bigImageContainer.style.visibility = "visible";
+    let bigCardImage = document.createElement("img");
+    bigCardImage.src = pathmap[card_name];
 
-    big_image_container.appendChild(big_card_image);
+    bigImageContainer.appendChild(bigCardImage);
 }
 
 function hideBigCard(){
-    big_image_container.style.visibility = "hidden";
+    bigImageContainer.style.visibility = "hidden";
 }
 
 function toggleGameMode(){
-    if (! buttons_enabled) return;
-    pool_selection = (pool_selection == "multiple-pool") ? "single-pool" : "multiple-pool";
+    if (! bButtonsEnabled) return;
+    poolSelection = (poolSelection == "multiple-pool") ? "single-pool" : "multiple-pool";
     updateTableDisplay();
 }
 
 function togglePlayAnim(){
-    if (! buttons_enabled) return;
-    anim_enabled = (anim_enabled == false) ? true : false;
+    if (! bButtonsEnabled) return;
+    bAnimEnabled = (bAnimEnabled == false) ? true : false;
 }
 
 function updateTableDisplay(){
-    // TODO: is using 'visible/hidden' the best way?
-    // what about ... using position?
-    if (pool_selection == "multiple-pool") {
-        table_multi.style.display = "block";
-        table_single.style.display = "none";
+    if (poolSelection == "multiple-pool") {
+        tableMulti.style.display = "block";
+        tableSingle.style.display = "none";
     }
-    else if (pool_selection == "single-pool") {
-        table_multi.style.display = "none";
-        table_single.style.display = "flex";
+    else if (poolSelection == "single-pool") {
+        tableMulti.style.display = "none";
+        tableSingle.style.display = "flex";
     }
 }
