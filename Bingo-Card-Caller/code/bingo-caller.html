@@ -10,18 +10,42 @@
   <div id="tool-bar-spacer">
     <div id="tool-bar">
       <button id="new-card-button" onclick="activateBingoMachine()">New Card</button>
-      <button id="toggle-game-mode-button" onclick="toggleGameMode()">Toggle Mode</button>
       <button id="toggle-anim-button" onclick="togglePlayAnim()">Show Anim</button>
       <button id="toggle-card-text-button" onclick="toggleCardText()">Show Card Text</button>
+      <select name="game-mode-selection" id="game-mode-selection" onchange="updateGameMode()">
+        <option value="select-a-game-mode">Select a Game Mode</option>
+        <option value="image-multi-pool">Standard Bingo with Images</option>
+        <option value="number-multi-pool">Standard Bingo with Numbers</option>
+        <option value="image-single-pool">Single Pool Bingo with Images</option>
+        <option value="number-single-pool">Single Pool Bingo with Numbers</option>
+      </select>
     </div>
   </div>
-  <div id="table-single"></div>
-  <div id="table-multi">
-    <div class="table-row" id="row-B"><div class="row-header">B</div></div>
-    <div class="table-row" id="row-I"><div class="row-header">I</div></div>
-    <div class="table-row" id="row-N"><div class="row-header">N</div></div>
-    <div class="table-row" id="row-G"><div class="row-header">G</div></div>
-    <div class="table-row" id="row-O"><div class="row-header">O</div></div>
+  <!--show menu if pool(s) don't exist for desired game mode-->
+  <div class="centered-box" id="number-generation-menu">
+    <label for="range-min">Min:</label>
+    <input type="number" id="range-min" fname="range-min">
+    <label for="range-max">Max:</label>
+    <input type="number" id="range-max" fname="range-max">
+    <button id="generate-number-pools-button" onclick="generateNumberPools()">Generate Number Pool(s)</button>
+  </div>
+  <!--different tables for different game modes-->
+  <div class="centered-box" id="game-mode-descriptions"></div>
+  <div class="table-single" id="image-table-single"></div>
+  <div class="table-single" id="number-table-single"></div>
+  <div class="table-multi" id="image-table-multi">
+    <div class="table-row" id="img-row-B"><div class="row-header">B</div></div>
+    <div class="table-row" id="img-row-I"><div class="row-header">I</div></div>
+    <div class="table-row" id="img-row-N"><div class="row-header">N</div></div>
+    <div class="table-row" id="img-row-G"><div class="row-header">G</div></div>
+    <div class="table-row" id="img-row-O"><div class="row-header">O</div></div>
+  </div>
+  <div class="table-multi" id="number-table-multi">
+    <div class="table-row" id="num-row-B"><div class="row-header">B</div></div>
+    <div class="table-row" id="num-row-I"><div class="row-header">I</div></div>
+    <div class="table-row" id="num-row-N"><div class="row-header">N</div></div>
+    <div class="table-row" id="num-row-G"><div class="row-header">G</div></div>
+    <div class="table-row" id="num-row-O"><div class="row-header">O</div></div>
   </div>
   <div id="big-image-container"></div>
   <div id="bingo-machine-container">

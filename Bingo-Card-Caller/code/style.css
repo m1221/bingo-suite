@@ -9,7 +9,6 @@ body {
 }
 
 .table-row {
-    color: white;
     display: flex;
     height: 18vh;
     align-items: center;
@@ -66,7 +65,7 @@ body {
   }
 }
 
-#table-single {
+.table-single {
     display: flex;
     flex-wrap: wrap;
 }
@@ -88,6 +87,7 @@ body {
     position:fixed;
     width:30vw;
     height:auto;
+    min-height: 30vh;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
@@ -129,6 +129,7 @@ body {
 
 .table-card {
     height: 14vh;
+    min-width: 10vw;
     width: auto;
     margin:3px;
     border-style:ridge groove;
@@ -139,6 +140,7 @@ body {
 }
 
 .row-header {
+    color: white;
     font-size: 10vh;
     width: 8vw;
 }
@@ -157,6 +159,15 @@ body {
     border-radius: 5px;
 }
 
+.card-number {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    margin: auto;
+}
+
 .pool-id-text {
     color: black;
     background: white;
@@ -165,4 +176,14 @@ body {
     left: 0;
     padding: 5px;
     border-radius: 5px;
+}
+
+.centered-box {
+    display: inline-grid;
+    position: fixed;
+    color: white;
+    top: 45%;
+    left: 50%;
+    font-size: xx-large;
+    transform: translate(-50%, -50%);
 }

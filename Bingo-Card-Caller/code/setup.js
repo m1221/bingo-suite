@@ -1,18 +1,20 @@
-let pool = [];
+let imagePool = [];
 let pathmap = {};
-let pools = {}
+let imagePools = {}
 
+// 1. generate a single image pool
 filepaths.forEach(path => {
-    // '../source-images/individual-icons/01_spider-web.png',
+    // '../source-images/individual-icons/01_spider-web.png' -> spider-web
     let split_path = path.split("/");
     let terminal = split_path[split_path.length - 1];
     let name = (terminal.split("_")[1]).split(".")[0]
     pathmap[name] = path;
-    pool.push(name);
+    imagePool.push(name);
 });
 
+// 2. generate multiple image pools
 for (const letter of "BINGO"){
-    pools[letter] = [].concat(pool);
+    imagePools[letter] = [].concat(imagePool);
 }
 
 function popRandom(array){
