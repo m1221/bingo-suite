@@ -34,6 +34,8 @@ let numberPool = null;
 let numberPools = null;
 gameModeSelection.value = "select-a-game-mode";
 updateTableDisplay(null);
+updatePlayAnimButton(bAnimEnabled);
+updateCardTextButton(bShowCardText);
 
 /* temp for testing
 numberPool = Array.from({length: 25}, (e, i)=> i + 1);
@@ -224,9 +226,22 @@ function updateGameMode(){
     updateTableDisplay(poolSelection);
 }
 
+function getNewTextColor(bActive){
+    let newTextColor = bActive ? "#ffffff" : "#a2a2a2";
+    return newTextColor;
+}
+
+function updatePlayAnimButton(bActive){
+    let newText = bActive ? "Anim is ON" : "Anim is OFF";
+    toggleAnimButton.textContent = newText;
+    toggleAnimButton.style.color = getNewTextColor(bActive);
+}
+
 function togglePlayAnim(){
     if (! bButtonsEnabled) return;
-    bAnimEnabled = (bAnimEnabled == false) ? true : false;
+    buttonClickSound.play();
+    bAnimEnabled = bAnimEnabled ? false : true;
+    updatePlayAnimButton(bAnimEnabled);
 }
 
 function updateTableDisplay(poolSelection){
@@ -264,13 +279,22 @@ function updateTableDisplay(poolSelection){
     }
 }
 
+function updateCardTextButton(bActive){
+    let newText = bActive ? "Card Text is ON" : "Card Text is OFF";
+    toggleCardTextButton.textContent = newText;
+    let newTextColor = getNewTextColor(bActive);
+    toggleCardTextButton.style.color = newTextColor;
+}
+
 function toggleCardText(){
     if (! bButtonsEnabled) return;
+    buttonClickSound.play();
     bShowCardText = bShowCardText ? false : true;
     let textVisibility = bShowCardText ?  "visible" : "hidden";
     for (cardText of drawnCardTexts) {
         cardText.style.visibility = textVisibility;
     }
+    updateCardTextButton(bShowCardText);
 }
 
 function generateNumberPools(){

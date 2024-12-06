@@ -20,7 +20,6 @@ body {
   box-sizing: border-box;
   color: #ffffff;
   display: flex;
-  font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   font-size: 1rem;
   font-weight: 700;
   justify-content: center;
@@ -37,6 +36,7 @@ body {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  float: left;
 }
 
 #new-card-button:focus {
@@ -75,11 +75,10 @@ body {
 }
 
 #tool-bar {
-    background-color:orange;
+    background-color: orange;
     position:fixed;
     height:inherit;
     width:100%;
-    display: flex;
 }
 
 #big-image-container {
@@ -109,6 +108,10 @@ body {
 
 #bingo-machine {
     border-radius:50px;
+}
+
+#buttons-wrapper {
+    float: right;
 }
 
 .bingo-machine-fadeIn {
@@ -157,6 +160,22 @@ body {
     max-width: 90%;
     padding: 5px;
     border-radius: 5px;
+}
+
+.toolbar-button {
+    align-self: center;
+    padding: 10px;
+    margin: 10px;
+    min-width: 10vw;
+    border-radius: 10px;
+    background-color: #303738;
+    color: #ffffff;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.toolbar-button:disabled {
+    opacity: 0.9;
 }
 
 .card-number {

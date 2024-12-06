@@ -10,15 +10,17 @@
   <div id="tool-bar-spacer">
     <div id="tool-bar">
       <button id="new-card-button" onclick="activateBingoMachine()">New Card</button>
-      <button id="toggle-anim-button" onclick="togglePlayAnim()">Show Anim</button>
-      <button id="toggle-card-text-button" onclick="toggleCardText()">Show Card Text</button>
-      <select name="game-mode-selection" id="game-mode-selection" onchange="updateGameMode()">
+      <div id="buttons-wrapper">
+      <button class="toolbar-button" id="toggle-anim-button" onclick="togglePlayAnim()">Anim is OFF</button>
+      <button class="toolbar-button" id="toggle-card-text-button" onclick="toggleCardText()"> Card Text is OFF</button>
+      <select class="toolbar-button" name="game-mode-selection" id="game-mode-selection" onchange="updateGameMode()">
         <option value="select-a-game-mode">Select a Game Mode</option>
         <option value="image-multi-pool">Standard Bingo with Images</option>
         <option value="number-multi-pool">Standard Bingo with Numbers</option>
         <option value="image-single-pool">Single Pool Bingo with Images</option>
         <option value="number-single-pool">Single Pool Bingo with Numbers</option>
       </select>
+    </div>
     </div>
   </div>
   <!--show menu if pool(s) don't exist for desired game mode-->
