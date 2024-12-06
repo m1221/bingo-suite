@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import argparse
 import random
 from PIL import Image, ImageDraw, ImageFont

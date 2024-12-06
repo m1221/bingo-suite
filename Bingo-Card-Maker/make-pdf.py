@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 import argparse
 from pathlib import Path
 from reportlab.lib import pagesizes
