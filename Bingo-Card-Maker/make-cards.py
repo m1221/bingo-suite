@@ -54,11 +54,11 @@ def __getDisplayName__(img_path):
     temp = ' '.join(((img_path.name).split('.')[0]).split('-'))
     apostrophe_pos = temp.rfind('aaa')
     if apostrophe_pos != -1:
-        temp = temp[0:apostrophe_pos] + '\'' + temp[apostrophe_pos + 3]
+        temp = temp[0:apostrophe_pos] + '\'' + temp[apostrophe_pos + 3:]
 
     hyphen_pos = temp.rfind('hhh')
     if hyphen_pos != -1:
-        temp = temp[0:hyphen_pos] + '\'' + temp[hyphen_pos + 3]
+        temp = temp[0:hyphen_pos] + '-' + temp[hyphen_pos + 3:]
 
     return temp[:16].upper() # truncate after x characters
 
