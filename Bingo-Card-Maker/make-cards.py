@@ -60,7 +60,7 @@ def __getDisplayName__(img_path):
     if hyphen_pos != -1:
         temp = temp[0:hyphen_pos] + '\'' + temp[hyphen_pos + 3]
 
-    return temp.upper()
+    return temp[:16].upper() # truncate after x characters
 
 def makeBingoCard(id, side_length=parser.parse_args().side_length, line_thickness=2):
     # 1. Create a blank white image for the bingo card
@@ -78,7 +78,8 @@ def makeBingoCard(id, side_length=parser.parse_args().side_length, line_thicknes
     header_font = __loadFont__(font_prefix + "lyx/dsrom10.ttf", size_mod * 20)
     footer_font = __loadFont__(font_prefix + "dejavu/DejaVuSerif.ttf", 10)
     number_font = __loadFont__(font_prefix + "dejavu/DejaVuSans.ttf", size_mod * 22)
-    space_font = __loadFont__(font_prefix + "dejavu/DejaVuSans.ttf", size_mod * 10)
+    box_font = __loadFont__(font_prefix + "dejavu/DejaVuSans.ttf", size_mod * 8)
+    box_font_small = __loadFont__(font_prefix + "dejavu/DejaVuSans.ttf", size_mod * 6)
 
     # 3. Draw the Serial Number in the footer
     serial_number = str(id).zfill(3)
@@ -147,10 +148,11 @@ def makeBingoCard(id, side_length=parser.parse_args().side_length, line_thicknes
                 # write descriptive text to the space
                 if (parser.parse_args().words):
                     text = __getDisplayName__(img_path)
-                    text_size = draw.textsize(text, font=space_font)
+                    text_font = box_font_small if len(text) > 10 else box_font
+                    text_size = draw.textsize(text, font=text_font)
                     x_pos = x + (side_length - text_size[0]) // 2
                     y_pos = y + (side_length - text_size[1]) * 19 // 20
-                    draw.text((x_pos, y_pos), text, fill='black', font=space_font)
+                    draw.text((x_pos, y_pos), text, fill='black', font=text_font)
 
     # 7. Draw grid lines
     for i in range(6):  # 6 lines for 5 squares
