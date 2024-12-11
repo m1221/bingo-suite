@@ -5,6 +5,20 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 
+def __clamp_inner_image_scale__(arg):
+    try:
+        f = float(arg)
+    except:
+        raise argparse.ArgumentTypeError(f"'{arg}' of type {type(arg)} cannot be converted into a float.")
+    
+    if f < 0.5:
+        print(f"--inner_image_scale clamped from {f} to 0.5")
+        return 0.5
+    elif f > 1.0:
+        print(f"--inner_image_scale clamped from {f} to 1.0")
+        return 1.0
+    return f
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-q", "--quantity", help="the number of cards to generate", default=4, type=int)
@@ -12,6 +26,7 @@ parser.add_argument("-S", "--single-pool", help="if set, items are pulled from a
 parser.add_argument("-s", "--source", help="the path to the directory that contains the image icons to be displayed on the bingo cards", default="../source-images/individual-icons", type=str)
 parser.add_argument("-o", "--output", help="directory where png cards are saved to", default="./bingo-cards", type=str)
 parser.add_argument("-a", "--side_length", help="size of a bingo square, default = 60", default=60, type=int)
+parser.add_argument("-i", "--inner_image_scale", help="what percent of the box should the image fill; clamped from 0.5 to 1.0; default = 1.0", default=1.0, type=__clamp_inner_image_scale__)
 parser.add_argument("-w", "--words", help="writes words extracted from the image filenames onto the bottoms of the spaces", action=argparse.BooleanOptionalAction)
 parser.add_argument("-n", "--number_range", help="if set, uses numbers instead of images; enter the range, eg `-n 1-50`", type=str)
 
@@ -121,17 +136,20 @@ def makeBingoCard(id, side_length=parser.parse_args().side_length, line_thicknes
                 # Get an image and resize it
                 img_path = selection_pool.pop()
                 img = Image.open(img_path).convert('RGBA')  # Ensure image has alpha channel
-                img = img.resize((side_length, side_length), Image.ANTIALIAS)
+                scale_factor = parser.parse_args().inner_image_scale
+                scaled_length = round(side_length * scale_factor)
+                img = img.resize((scaled_length, scaled_length), Image.ANTIALIAS)
 
                 # Create a mask for pasting
-                card.paste(img, (x, y), img)  # Use img as the mask to preserve transparency
+                offset = round(side_length * (1 - scale_factor) / 2)
+                card.paste(img, (x + offset, y + offset), img)  # Use img as the mask to preserve transparency
 
                 # write descriptive text to the space
                 if (parser.parse_args().words):
                     text = __getDisplayName__(img_path)
                     text_size = draw.textsize(text, font=space_font)
                     x_pos = x + (side_length - text_size[0]) // 2
-                    y_pos = y + (side_length - text_size[1]) * 7 // 8
+                    y_pos = y + (side_length - text_size[1]) * 19 // 20
                     draw.text((x_pos, y_pos), text, fill='black', font=space_font)
 
     # 7. Draw grid lines
