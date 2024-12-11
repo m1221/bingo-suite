@@ -36,8 +36,7 @@ def __getNumberListFromUserInput__(number_range):
 
 # utility fn
 def __getDisplayName__(img_path):
-    # '01_spider-web.png' => 'spider web'
-    temp = ' '.join(((img_path.name.split('_')[1]).split('.')[0]).split('-'))
+    temp = ' '.join(((img_path.name).split('.')[0]).split('-'))
     apostrophe_pos = temp.rfind('aaa')
     if apostrophe_pos != -1:
         temp = temp[0:apostrophe_pos] + '\'' + temp[apostrophe_pos + 3]
