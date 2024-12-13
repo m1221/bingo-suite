@@ -124,7 +124,7 @@ function activateBingoMachine(){
 
 }
 
-function addCardToTable(card_id, poolID){
+function addCardToTable(card_id, pool_ID){
     let card = document.createElement("div");
     card.className = "table-card";
     let cardName = getCardDisplayName(card_id);
@@ -150,13 +150,13 @@ function addCardToTable(card_id, poolID){
 
     switch (poolSelection) {
         case "image-multi-pool":
-            document.getElementById(`img-row-${pool_id}`).appendChild(card);
+            document.getElementById(`img-row-${pool_ID}`).appendChild(card);
             break;
         case "image-single-pool":
             imageTableSingle.appendChild(card);
             break;
         case "number-multi-pool":
-            document.getElementById(`num-row-${pool_id}`).appendChild(card);
+            document.getElementById(`num-row-${pool_ID}`).appendChild(card);
             break;
         case "number-single-pool":
             numberTableSingle.appendChild(card);
