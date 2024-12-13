@@ -21,3 +21,17 @@ function popRandom(array){
     let random_index = Math.floor(Math.random() * array.length);
     return array.splice(random_index, 1)[0];
 }
+
+function getCardDisplayName(cardName){
+    let displayName = cardName.replace("-", " ");
+    let apostrophePos = displayName.lastIndexOf("aaa");
+    if (apostrophePos != -1){
+        displayName = displayName.slice(0, apostrophePos) + "'" + displayName.slice(apostrophePos + 3);
+    }
+
+    hyphen_pos = displayName.lastIndexOf("hhh");
+    if (hyphen_pos != -1){
+        displayName = displayName.slice(0, hyphen_pos) + "-" + displayName.slice(hyphen_pos + 3);
+    }
+    return displayName;
+}

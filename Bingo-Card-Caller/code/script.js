@@ -1,4 +1,6 @@
-const gameModeSelection = document.getElementById("game-mode-selection");
+const body = document.querySelector("body");
+const toolbar = document.getElementById("tool-bar");
+const gameModeDropdown = document.getElementById("game-mode-dropdown");
 const minRange = document.getElementById("range-min");
 const maxRange = document.getElementById("range-max");
 const newCardButton = document.getElementById("new-card-button");
@@ -14,6 +16,19 @@ const bingoMachineAnim = document.getElementById("bingo-machine");
 const bingoMachineContainer = document.getElementById("bingo-machine-container");
 const bigImageContainer = document.getElementById("big-image-container");
 // image-multi-pool; image-single-pool; number-multi-pool; number-single-pool
+const themeDropdown = document.getElementById("theme-dropdown");
+const imagePanel_B = document.getElementById("img-row-B");
+const imagePanel_I = document.getElementById("img-row-I");
+const imagePanel_N = document.getElementById("img-row-N");
+const imagePanel_G = document.getElementById("img-row-G");
+const imagePanel_O = document.getElementById("img-row-O");
+const numberPanel_B = document.getElementById("img-row-B");
+const numberPanel_I = document.getElementById("img-row-I");
+const numberPanel_N = document.getElementById("img-row-N");
+const numberPanel_G = document.getElementById("img-row-G");
+const numberPanel_O = document.getElementById("img-row-O");
+const oddPanels = [imagePanel_B, imagePanel_N, imagePanel_O, numberPanel_B, numberPanel_N, numberPanel_O];
+const evenPanels = [imagePanel_I, imagePanel_G, numberPanel_I, numberPanel_G];
 let poolSelection = "select-a-game-mode"; 
 let buttonClickSound = new Audio("../audio/click.wav");
 let rollingSound = new Audio("../audio/rolling-sound.wav")
@@ -32,17 +47,10 @@ minRange.value = 1;
 maxRange.value = 25;
 let numberPool = null;
 let numberPools = null;
-gameModeSelection.value = "select-a-game-mode";
+gameModeDropdown.value = "select-a-game-mode";
 updateTableDisplay(null);
 updatePlayAnimButton(bAnimEnabled);
 updateCardTextButton(bShowCardText);
-
-/* temp for testing
-numberPool = Array.from({length: 25}, (e, i)=> i + 1);
-numberPools = {};
-for (const letter of "BINGO"){
-    numberPools[letter] = [].concat(numberPool);
-}*/
 
 // check for valid BingoMachineImage
 let testImage = document.createElement("img");
@@ -91,7 +99,7 @@ function activateBingoMachine(){
             }, 300);
             return;
     }
-    
+
     // 2. show card (and possible bingo machine anim)
     let bingo_machine_time = 0;
     if (bAnimEnabled && bBingoMachineIMGValid) {
@@ -109,29 +117,30 @@ function activateBingoMachine(){
     
     // 3. update table and reset 
     setTimeout(function(){
-        addCardToTable(pool_ID, newCardID);
+        addCardToTable(newCardID, pool_ID);
         hideBigCard();
         setButtonsEnabled(true);
     }, bingo_machine_time + 4000);
 
 }
 
-function addCardToTable(pool_id, card_name){
+function addCardToTable(card_id, poolID){
     let card = document.createElement("div");
     card.className = "table-card";
+    let cardName = getCardDisplayName(card_id);
 
     let card_symbol;
     if (poolSelection.search("image") > -1) {
         card_symbol = document.createElement("img");
-        card_symbol.src = pathmap[card_name];
+        card_symbol.src = pathmap[card_id];
     } else if (poolSelection.search("number") > -1) {
         card_symbol = document.createElement("p");
         card_symbol.className = "card-number";
-        card_symbol.textContent = card_name;
+        card_symbol.textContent = cardName;
     }
     
     let card_text = document.createElement("div");
-    card_text.textContent = card_name;
+    card_text.textContent = cardName;
     card_text.className = "card-text";
     card_text.style.visibility = bShowCardText ? "visible" : "hidden";
 
@@ -181,20 +190,21 @@ function playBingoMachineAudio(){
     
 }
 
-function displayBigCard(card_name, pool_id){
+function displayBigCard(card_id, pool_id){
     if (bigImageContainer.hasChildNodes()){
         bigImageContainer.innerHTML = "";
     }
     
+    let cardName = getCardDisplayName(card_id);
     bigImageContainer.style.visibility = "visible";
     let bigCardSymbol;
     let bigCardText = null;
     if (poolSelection.search("image") > -1) {
         bigCardSymbol = document.createElement("img");
-        bigCardSymbol.src = pathmap[card_name];
+        bigCardSymbol.src = pathmap[card_id];
         // text at bottom of card
         bigCardText = document.createElement("div");
-        bigCardText.textContent = card_name;
+        bigCardText.textContent = cardName;
         bigCardText.className = "card-text"; 
         bigCardText.style.fontSize = "5vh";
         bigImageContainer.appendChild(bigCardText);
@@ -202,7 +212,7 @@ function displayBigCard(card_name, pool_id){
         bigCardSymbol = document.createElement("p");
         bigCardSymbol.className = "card-number";
         bigCardSymbol.style.fontSize = "128px";
-        bigCardSymbol.textContent = card_name;
+        bigCardSymbol.textContent = cardName;
     }
     let bigCardPoolID = document.createElement("div");
     bigCardPoolID.className = "pool-id-text";
@@ -219,10 +229,10 @@ function hideBigCard(){
 
 function updateGameMode(){
     if (! bButtonsEnabled) {
-        gameModeSelection.value = poolSelection;
+        gameModeDropdown.value = poolSelection;
         return;
     }
-    poolSelection = gameModeSelection.value;
+    poolSelection = gameModeDropdown.value;
     updateTableDisplay(poolSelection);
 }
 
@@ -321,15 +331,46 @@ function setButtonsEnabled(bool) {
     bButtonsEnabled = bool;
     newCardButton.style.color = bool ? "#ffffff" : "#000000";
     if (bool) {
-        gameModeSelection.removeAttribute('disabled');
+        gameModeDropdown.removeAttribute('disabled');
+        themeDropdown.remove('disabled');
         newCardButton.removeAttribute('disabled');
         toggleAnimButton.removeAttribute('disabled');
         toggleCardTextButton.removeAttribute('disabled');
     }
     else {
-        gameModeSelection.setAttribute('disabled', true);
+        gameModeDropdown.setAttribute('disabled', true);
+        themeDropdown.setAttribute('disabled', true);
         newCardButton.setAttribute('disabled', true);
         toggleAnimButton.setAttribute('disabled', true);
         toggleCardTextButton.setAttribute('disabled', true);
     }
 }
+
+// add options to themeDropdown
+for ([id, theme] of themes){
+    let option = document.createElement("option");
+    option.value = id;
+    option.textContent = theme.displayName;
+    themeDropdown.appendChild(option);
+}
+
+function updateTheme(){
+    let newTheme = themes.get(themeDropdown.value);
+    let oddPanelColor = newTheme.colors.get("odd-number-panel");
+    let evenPanelColor = newTheme.colors.get("even-number-panel");
+
+    body.style.backgroundColor = newTheme.colors.get("body-background");
+    toolbar.style.background = newTheme.colors.get("toolbar");
+    for (panel of oddPanels){
+        panel.style.background = oddPanelColor;
+    }
+    for (panel of evenPanels){
+        panel.style.background = evenPanelColor;
+    }
+    
+    // other elements that might be modified according to theme:
+    // card borders; buttons; letters on the side (of multiple pool bingo)
+    // add blurred background image?
+}
+
+updateTheme();

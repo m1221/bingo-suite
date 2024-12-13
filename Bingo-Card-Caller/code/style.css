@@ -114,6 +114,11 @@ body {
     float: right;
 }
 
+#img-row-I,
+#img-row-G {
+    background-color: #222;
+}
+
 .bingo-machine-fadeIn {
     animation: fadeIn 2s;
 }

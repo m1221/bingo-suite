@@ -11,7 +11,7 @@ let filepaths = [
     '../../source-images/individual-icons/10_banana.png',
     '../../source-images/individual-icons/11_apple.png',
     '../../source-images/individual-icons/12_ghost.png',
-    '../../source-images/individual-icons/13_eyehhh-spider.png',
+    '../../source-images/individual-icons/13_eyehhhspider.png',
     '../../source-images/individual-icons/14_witchaaas-hat.png',
     '../../source-images/individual-icons/15_sun.png',
     '../../source-images/individual-icons/16_rain.png',
