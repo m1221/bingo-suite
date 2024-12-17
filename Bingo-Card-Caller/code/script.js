@@ -332,7 +332,7 @@ function setButtonsEnabled(bool) {
     newCardButton.style.color = bool ? "#ffffff" : "#000000";
     if (bool) {
         gameModeDropdown.removeAttribute('disabled');
-        themeDropdown.remove('disabled');
+        themeDropdown.removeAttribute('disabled');
         newCardButton.removeAttribute('disabled');
         toggleAnimButton.removeAttribute('disabled');
         toggleCardTextButton.removeAttribute('disabled');
@@ -374,3 +374,13 @@ function updateTheme(){
 }
 
 updateTheme();
+
+// add spacers for table rows 
+(function(){
+    let tableRows = document.getElementsByClassName("table-row");
+    for (row of tableRows){
+        let spacer = document.createElement("div");
+        spacer.className = "spacer";
+        row.insertBefore(spacer, row.firstChild);
+    }
+})();

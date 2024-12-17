@@ -21,7 +21,7 @@ halloweenTheme.colors.set("even-number-panel", "#5d4314");
 var christmasTheme = new Theme("theme-christmas", "Christmas");
 christmasTheme.colors.set("body-background", "rgb(0, 146, 9)");
 christmasTheme.colors.set("toolbar", "rgb(217, 0, 0)");
-christmasTheme.colors.set("odd-number-panel", "#8F5B00");
+christmasTheme.colors.set("odd-number-panel", "rgb(28, 79, 0)");
 christmasTheme.colors.set("even-number-panel", "rgb(0, 146, 9)");
 
 var themes = new Map();

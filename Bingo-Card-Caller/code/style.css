@@ -70,6 +70,10 @@ body {
     flex-wrap: wrap;
 }
 
+.table-multi {
+    display: inline-block;
+}
+
 #tool-bar-spacer {
     height:8vh;
 }
@@ -82,7 +86,7 @@ body {
 }
 
 #big-image-container {
-    background-color: chocolate;
+    background-color: rgb(255, 255, 255);
     position:fixed;
     width:30vw;
     height:auto;
@@ -142,7 +146,7 @@ body {
     margin:3px;
     border-style:ridge groove;
     border-radius:40px;
-    border-color:salmon;
+    border-color:rgb(0, 0, 0);
     background-color:white;
     position: relative;
 }
@@ -151,6 +155,16 @@ body {
     color: white;
     font-size: 10vh;
     width: 8vw;
+    background-color: black;
+    border-radius: 20px;
+    text-align: center;
+    position: fixed;
+    z-index: 1;
+    margin-left: 1vw;
+}
+
+.spacer {
+    width: 10vw;
 }
 
 .card-text {
