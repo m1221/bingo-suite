@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('sheets', type=int)
 
 card_dir = Path("./bingo-cards")
-card_pathnames = [pathname for pathname in card_dir.glob("*")]
+card_pathnames = [pathname for pathname in card_dir.glob("*") if pathname.name != ".placeholder"]
 
 def get_size(page_size, orientation):
     # 1. Sanitize arguments
@@ -70,22 +70,19 @@ def create_bingo_card_hex(c, img_path_1, img_path_2, img_path_3, img_path_4, img
     # 3. Finish Page
     c.showPage()
 
-def create_bingo_card_set(number_of_sheets, cards_per_sheet=4, page_size="PRC8K", orientation="landscape"):
+def create_bingo_card_set(number_of_sheets, cards_per_sheet=6, page_size="PRC8K", orientation="landscape"):
     # 1. get size with applied orientation
     size = get_size(page_size, orientation)
 
-    if cards_per_sheet == 2:
-        print("pending implementation of 2 cards per sheet")
-        return
-    elif cards_per_sheet != 4:
-        print("oops, unable to fit that numbers cards on a sheet, choose 2 or 4")
+    if cards_per_sheet != 6:
+        print("oops, unable to fit that number of cards on a sheet")
         return
 
     # 2. make canvas and add card images to it
     c = canvas.Canvas("bingo-card-set.pdf", pagesize=size)
-    for n in range(1, number_of_sheets+1):
+    for n in range(1, number_of_sheets):
         try:
-            base_index = (4 * n) - 4
+            base_index = (6 * n) - 6
             path_1 = card_pathnames[base_index]
             path_2 = card_pathnames[base_index + 1]
             path_3 = card_pathnames[base_index + 2]
@@ -101,6 +98,6 @@ def create_bingo_card_set(number_of_sheets, cards_per_sheet=4, page_size="PRC8K"
             break
 
     # 3. save
-    c.save()  # Save the PDF
+    c.save() 
 
 create_bingo_card_set(parser.parse_args().sheets)
