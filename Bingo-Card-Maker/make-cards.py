@@ -29,6 +29,7 @@ parser.add_argument("-a", "--side_length", help="size of a bingo square, default
 parser.add_argument("-i", "--inner_image_scale", help="what percent of a bingo space should the image fill; clamped from 0.5 to 1.0; default = 1.0", default=1.0, type=__clamp_inner_image_scale__)
 parser.add_argument("-w", "--words", help="writes words extracted from the image filenames onto the bottoms of the bingo spaces; by default, no words appear on bingo spaces", action=argparse.BooleanOptionalAction)
 parser.add_argument("-n", "--number_range", help="if set, uses numbers instead of images; enter the range, eg `-n 1-50`", type=str)
+parser.add_argument("-Q", "--quiet_mode", help="if set, silence the completion message at the end of the script", action=argparse.BooleanOptionalAction)
 
 def __loadFont__(dir, font_size):
     try:
@@ -173,3 +174,13 @@ if parser.parse_args().number_range == None:
 
 for id in range(1, parser.parse_args().quantity + 1):
     makeBingoCard(id)
+
+if not parser.parse_args().quiet_mode:
+    print(f"""*** Success! You created {parser.parse_args().quantity} cards in '{parser.parse_args().output}' directory.***
+  Type: {"Numbers" if parser.parse_args().number_range else "Images"}
+  {"Range" if parser.parse_args().number_range else "Source"}: {parser.parse_args().number_range if parser.parse_args().number_range else parser.parse_args().source}
+  Pool: {"Single" if parser.parse_args().single_pool else "Multi"}
+  Write Words on Cards: {"Yes" if parser.parse_args().words else "No"}
+  Side Length: {parser.parse_args().side_length}
+  Inner Image Scale (only applies to images): {parser.parse_args().inner_image_scale}
+""")
