@@ -80,9 +80,9 @@ def create_bingo_card_set(number_of_sheets, cards_per_sheet=6, page_size="PRC8K"
 
     # 2. make canvas and add card images to it
     c = canvas.Canvas("bingo-card-set.pdf", pagesize=size)
-    for n in range(1, number_of_sheets):
+    for n in range(0, number_of_sheets):
         try:
-            base_index = (6 * n) - 6
+            base_index = 6 * n
             path_1 = card_pathnames[base_index]
             path_2 = card_pathnames[base_index + 1]
             path_3 = card_pathnames[base_index + 2]
