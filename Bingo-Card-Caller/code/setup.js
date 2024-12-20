@@ -4,10 +4,14 @@ let imagePools = {}
 
 // 1. generate a single image pool
 filepaths.forEach(path => {
-    // '../source-images/individual-icons/01_spider-web.png' -> spider-web
+    // '../source-images/individual-icons/01_spider-web.png' -> spider web
+    // '../source-images/individual-icons/spider-web.png' -> spider web
     let split_path = path.split("/");
     let terminal = split_path[split_path.length - 1];
-    let name = (terminal.split("_")[1]).split(".")[0]
+    if (terminal.search("_") != -1){
+        terminal = terminal.split("_")[1];
+    }
+    let name = terminal.split(".")[0];
     pathmap[name] = path;
     imagePool.push(name);
 });
