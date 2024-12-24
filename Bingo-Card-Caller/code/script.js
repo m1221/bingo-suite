@@ -100,6 +100,12 @@ function activateBingoMachine(){
             return;
     }
 
+    if (newCardID == undefined){
+        // display helpful message
+        setButtonsEnabled(true);
+        return;
+    }
+
     // 2. show card (and possible bingo machine anim)
     let bingo_machine_time = 0;
     if (bAnimEnabled && bBingoMachineIMGValid) {

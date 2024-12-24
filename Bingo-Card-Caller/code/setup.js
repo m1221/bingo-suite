@@ -22,6 +22,9 @@ for (const letter of "BINGO"){
 }
 
 function popRandom(array){
+    if (array.length == 0){
+        return undefined;
+    }
     let random_index = Math.floor(Math.random() * array.length);
     return array.splice(random_index, 1)[0];
 }
