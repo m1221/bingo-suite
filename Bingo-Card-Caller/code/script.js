@@ -7,6 +7,8 @@ const newCardButton = document.getElementById("new-card-button");
 const toggleAnimButton = document.getElementById("toggle-anim-button");
 const toggleCardTextButton = document.getElementById("toggle-card-text-button");
 const gameModeDescriptions = document.getElementById("game-mode-descriptions");
+const notificationBox = document.getElementById("notification-box");
+const notificationText = document.getElementById("notification");
 const numberGenerationMenu = document.getElementById("number-generation-menu");
 const imageTableSingle = document.getElementById("image-table-single");
 const numberTableSingle = document.getElementById("number-table-single");
@@ -92,8 +94,7 @@ function activateBingoMachine(){
             newCardID = popRandom(numberPool);
             break;    
         default:
-            // TODO: display message to user -> ask them to select a game mode
-            // only hide the message after the user has selected a game mode...
+            setNotification("display", "Please select a game mode.");
             setTimeout(function(){
                 setButtonsEnabled(true);
             }, 300);
@@ -101,7 +102,7 @@ function activateBingoMachine(){
     }
 
     if (newCardID == undefined){
-        // display helpful message
+        setNotification("display", `No more cards left in the ${pool_ID} pool!`, 2500)
         setButtonsEnabled(true);
         return;
     }
@@ -128,6 +129,19 @@ function activateBingoMachine(){
         setButtonsEnabled(true);
     }, bingo_machine_time + 4000);
 
+}
+
+function setNotification(mode="hide", msg="msg argument", displayTime=3000){
+    if (this.hTimer != undefined) { clearTimeout(this.hTimer)};
+    if (mode == "hide"){
+        notificationBox.style.visibility = "hidden";
+        return;
+    }
+    notificationText.textContent = msg;
+    notificationBox.style.visibility = "visible";
+    this.hTimer = setTimeout(function(){
+        notificationBox.style.visibility = "hidden";
+    }, displayTime);
 }
 
 function addCardToTable(card_id, pool_ID){
@@ -240,6 +254,7 @@ function updateGameMode(){
     }
     poolSelection = gameModeDropdown.value;
     updateTableDisplay(poolSelection);
+    setNotification("hide");
 }
 
 function getNewTextColor(bActive){
@@ -317,7 +332,7 @@ function generateNumberPools(){
     buttonClickSound.play();
     let range = Number(maxRange.value) - Number(minRange.value);
     if (range < 24) {
-        // TODO: display user-friendly message
+        setNotification("display", `${maxRange.value} - ${minRange.value} = ${range}. Please use a number range greater than 24.`)
         console.log("please range diff >= 24");
         return;
     }
@@ -381,7 +396,6 @@ function updateTheme(){
 
 updateTheme();
 
-// add spacers for table rows 
 (function(){
     let tableRows = document.getElementsByClassName("table-row");
     for (row of tableRows){
