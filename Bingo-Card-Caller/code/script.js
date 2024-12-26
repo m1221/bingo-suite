@@ -47,8 +47,7 @@ let drawnCardTexts = [];
 numberGenerationMenu.style.display = "none";
 minRange.value = 1;
 maxRange.value = 25;
-let numberPool = null;
-let numberPools = null;
+let numberPools = {};
 gameModeDropdown.value = "select-a-game-mode";
 updateTableDisplay(null);
 updatePlayAnimButton(bAnimEnabled);
@@ -68,8 +67,11 @@ setTimeout(function(){
 function activateBingoMachine(){
     buttonClickSound.play();
     if (bButtonsEnabled == false) return;
-    if (poolSelection == "number-multi-pool" && numberPools == null) return;
-    if (poolSelection == "number-single-pool" && numberPool == null) return;
+
+    // check if user has generated the number pool(s) from which they are trying to get a card
+    if (poolSelection == "number-multi-pool" && numberPools['B'] == undefined) return;
+    if (poolSelection == "number-single-pool" && numberPools['single-pool'] == undefined) return;
+
     // 0. disable ALL buttons
     setButtonsEnabled(false);
 
@@ -83,7 +85,7 @@ function activateBingoMachine(){
             newCardID = popRandom(random_pool);
             break;
         case "image-single-pool":
-            newCardID = popRandom(imagePool);
+            newCardID = popRandom(imagePools['single-pool']);
             break;
         case "number-multi-pool":
             pool_ID = "BINGO"[Math.floor(Math.random() * 5)];
@@ -91,7 +93,7 @@ function activateBingoMachine(){
             newCardID = popRandom(random_pool);
             break;
         case "number-single-pool":
-            newCardID = popRandom(numberPool);
+            newCardID = popRandom(numberPools['single-pool']);
             break;    
         default:
             setNotification("display", "Please select a game mode.");
@@ -288,7 +290,7 @@ function updateTableDisplay(poolSelection){
             imageTableMulti.style.display = "inline"; // inline vs block? i forgot the difference
             break;
         case "number-multi-pool":
-            if (numberPools == null) {
+            if (numberPools['B'] == undefined) {
                 numberGenerationMenu.style.display = "inline-grid";
                 break;
             }
@@ -298,7 +300,7 @@ function updateTableDisplay(poolSelection){
             imageTableSingle.style.display = "flex";
             break;
         case "number-single-pool":
-            if (numberPool == null) {
+            if (numberPools['single-pool'] == undefined) {
                 numberGenerationMenu.style.display = "inline-grid";
                 break;
             }
@@ -330,17 +332,23 @@ function toggleCardText(){
 
 function generateNumberPools(){
     buttonClickSound.play();
+
+    // check if entered range is valid (range > 24)
     let range = Number(maxRange.value) - Number(minRange.value);
     if (range < 24) {
         setNotification("display", `${maxRange.value} - ${minRange.value} = ${range}. Please use a number range greater than 24.`)
         console.log("please range diff >= 24");
         return;
     }
+
+    // generate an range that spans the specified range
     let temp =  Array.from({length: range}, (e, i)=> i + Number(minRange.value));
+
+    // generate specified number pool(s)
     if (poolSelection == "number-single-pool") {
-        numberPool = [].concat(temp);
-    } else if (poolSelection == "number-multi-pool") {
-        numberPools = {};
+        numberPools['single-pool'] = [].concat(temp);
+    } 
+    else if (poolSelection == "number-multi-pool") {
         for (const letter of "BINGO"){
             numberPools[letter] = [].concat(temp);
         }
