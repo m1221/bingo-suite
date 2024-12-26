@@ -342,7 +342,7 @@ function generateNumberPools(){
     }
 
     // generate an range that spans the specified range
-    let temp =  Array.from({length: range}, (e, i)=> i + Number(minRange.value));
+    let temp =  Array.from({length: range}, (e, i)=> String(i + Number(minRange.value)) );
 
     // generate specified number pool(s)
     if (poolSelection == "number-single-pool") {
