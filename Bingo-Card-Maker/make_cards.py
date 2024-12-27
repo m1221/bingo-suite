@@ -2,7 +2,7 @@
 """
 Make Cards
 
-This script makes bingo cards (png format) from either local images or a
+This script makes 5x5 bingo cards (png format) from either local images or a
 user-specified number range.
 
 For usage information:
@@ -97,7 +97,8 @@ def __make_list_from_range__(number_range: str) -> list[str]:
     b = int(b)
     if b - a >= 24:
         return [str(i) for i in range(a, b + 1)]
-    raise ValueError('The range must span at least 25 numbers.')
+    raise ValueError(f"ERROR: '{number_range}' is invalid. The difference "
+                     "between the max and min values must be at least 24.")
 
 
 # utility fn
@@ -250,24 +251,36 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
     card.save(f'{args_in.output}/{serial_number}_bingo-card.png', 'PNG')
 
 
-if args_in.number_range is None:
-    image_dir = Path(args_in.source)
-    image_pathnames = list(image_dir.glob("[!.]*"))
-
-for serial_id in range(1, args_in.quantity + 1):
-    make_card(serial_id)
-
-if not args_in.quiet_mode:
-    MAKE_MODE = "Numbers" if args_in.number_range else "Images"
-    RANGE_OR_SOURCE_H = "Range" if args_in.number_range else "Source Directory"
-    RANGE_OR_SOURCE = args_in.number_range if args_in.number_range else args_in.source
-    print(f"""*** SUCCESS! ***
-You created {args_in.quantity} cards in the '{args_in.output}' directory.
-SPECIFICATIONS:
-  Type: {MAKE_MODE}
-  {RANGE_OR_SOURCE_H}: {RANGE_OR_SOURCE}
+def __print_termination_message__(success: bool):
+    """Upon script termination, display user specifications."""
+    result = "SUCCESS" if success else "FAILURE"
+    make_mode = "Numbers" if args_in.number_range else "Images"
+    range_or_source_h = "Range" if args_in.number_range else "Source Directory"
+    range_or_source = args_in.number_range if args_in.number_range else args_in.source
+    print(f"*** {result}! ***")
+    if success:
+        print(f"You created {args_in.quantity} cards in the "
+              f"'{args_in.output}' directory.")
+    print(f"""SPECIFICATIONS:
+  Type: {make_mode}
+  {range_or_source_h}: {range_or_source}
   Pool(s): {"Single" if args_in.single_pool else "Multiple"}
   Write Words on Cards: {"Yes" if args_in.words else "No"}
   Side Length: {args_in.side_length}
   Inner Image Scale (only applies to images): {args_in.inner_image_scale}
 """)
+
+
+try:
+    if args_in.number_range is None:
+        image_dir = Path(args_in.source)
+        image_pathnames = list(image_dir.glob("[!.]*"))
+
+    for serial_id in range(1, args_in.quantity + 1):
+        make_card(serial_id)
+
+    if not args_in.quiet_mode:
+        __print_termination_message__(True)
+except Exception as e:
+    __print_termination_message__(False)
+    print(e)
