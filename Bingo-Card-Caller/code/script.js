@@ -24,11 +24,11 @@ const imagePanel_I = document.getElementById("img-row-I");
 const imagePanel_N = document.getElementById("img-row-N");
 const imagePanel_G = document.getElementById("img-row-G");
 const imagePanel_O = document.getElementById("img-row-O");
-const numberPanel_B = document.getElementById("img-row-B");
-const numberPanel_I = document.getElementById("img-row-I");
-const numberPanel_N = document.getElementById("img-row-N");
-const numberPanel_G = document.getElementById("img-row-G");
-const numberPanel_O = document.getElementById("img-row-O");
+const numberPanel_B = document.getElementById("num-row-B");
+const numberPanel_I = document.getElementById("num-row-I");
+const numberPanel_N = document.getElementById("num-row-N");
+const numberPanel_G = document.getElementById("num-row-G");
+const numberPanel_O = document.getElementById("num-row-O");
 const oddPanels = [imagePanel_B, imagePanel_N, imagePanel_O, numberPanel_B, numberPanel_N, numberPanel_O];
 const evenPanels = [imagePanel_I, imagePanel_G, numberPanel_I, numberPanel_G];
 let poolSelection = "select-a-game-mode"; 
@@ -336,12 +336,11 @@ function generateNumberPools(){
     // check if entered range is valid (range > 24)
     let range = Number(maxRange.value) - Number(minRange.value);
     if (range < 24) {
-        setNotification("display", `${maxRange.value} - ${minRange.value} = ${range}. Please use a number range greater than 24.`)
-        console.log("please range diff >= 24");
+        setNotification("display", `${maxRange.value} - ${minRange.value} = ${range}. Please use a number range greater than 24.`);
         return;
     }
 
-    // generate an range that spans the specified range
+    // generate an array of numbers (type=string) from min to to max
     let temp =  Array.from({length: range}, (e, i)=> String(i + Number(minRange.value)) );
 
     // generate specified number pool(s)
