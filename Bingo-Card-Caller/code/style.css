@@ -238,4 +238,7 @@ body {
     left: 50%;
     font-size: xx-large;
     transform: translate(-50%, -50%);
+    background-color: black;
+    border-radius: 15px;
+    padding: 80px;
 }

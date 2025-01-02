@@ -390,6 +390,11 @@ function updateTheme(){
 
     body.style.backgroundColor = newTheme.colors.get("body-background");
     toolbar.style.background = newTheme.colors.get("toolbar");
+
+    for (element of document.getElementsByClassName("centered-box")){
+        element.style.backgroundColor = newTheme.colors.get("centered-box");
+    }
+
     for (panel of oddPanels){
         panel.style.background = oddPanelColor;
     }
