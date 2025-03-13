@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 """
 The purpose of this script is to update the './code/filepaths.js' file used
 by the Bingo Caller browser app. the filepaths.js file contains an array of
