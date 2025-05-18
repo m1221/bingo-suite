@@ -11,6 +11,7 @@ $ python3 Bingo-Card-Maker/make_pdf.py -h
 """
 
 import argparse
+import sys
 from pathlib import Path
 from reportlab.lib import pagesizes
 from reportlab.pdfgen import canvas
@@ -28,6 +29,10 @@ parser.add_argument("-o", "--output", help=(
                     "it is placed in the 'Bingo-Card-Maker' directory"),
                     default="bingo-card-set.pdf", type=str)
 parser.add_argument('sheets', type=int)
+
+if len(sys.argv)==1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
 
 parent_dir = Path(__file__).resolve().parent
 SAVE_PATH = parent_dir / parser.parse_args().output

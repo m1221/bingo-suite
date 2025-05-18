@@ -12,6 +12,7 @@ $ python3 Bingo-Card-Maker/make_cards.py -h
 from pathlib import Path
 import argparse
 import random
+import sys
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -74,6 +75,9 @@ parser.add_argument("-Q", "--quiet_mode", help=(
                     "the script"), action=argparse.BooleanOptionalAction)
 
 args_in = parser.parse_args()
+if len(sys.argv)==1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
 script_dir = Path(__file__).resolve().parent
 SAVE_DIR = script_dir / args_in.output
 
