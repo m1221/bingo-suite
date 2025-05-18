@@ -1,11 +1,14 @@
 # About Bingo Suite
 
-Bingo Suite includes two apps:
-1. Bingo Card Maker
-1. Bingo Card Caller
+Make Bingo card PDFs and play bingo with the browser app.
 
-Bingo Card Maker can be used to make PDFs of Bingo Cards.
-Bingo Card Caller is a local, browser app that can be used to call bingo items.
+Bingo Suite includes three scripts:
+1. update-filepaths.py
+  * updates Bingo-Card-Caller/code/filepaths.js for the browser app (bingo-caller.html)
+1. make_cards.py
+  * makes bingo cards from png files or from a user-defined number range
+1. make_pdf.py
+  * gathers bingo cards and prints them to pdf
 
 This app suite is still heavily under construction. See TODO.txt for more information.
 

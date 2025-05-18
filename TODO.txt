@@ -1,8 +1,7 @@
 In no order of priority:
 1. make more user-friendly 
 	- establish pre-defined formats for card printouts
-	- make a script that simultaneously makes cards and pdfs
-2. add spreadsheet for odds calculation
-3. add code documentation
-4. add a thorough readme for usage instructions
-5. add a python equivalent of "update-filepaths-js.sh"
+2. add app for odds calculation
+    - this will require a dive into stats
+3. add a thorough readme for usage instructions
+4. make all scripts callable from anywhere, not just directories of scripts
