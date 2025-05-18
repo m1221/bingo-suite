@@ -2,13 +2,11 @@
 """
 Make PDF
 
-This script uses the png files found in `./bingo-cards` to generate a 
-pdf file of x sheets (user-specified number).
+This script uses the png files found in `Bingo-Card-Maker/bingo-cards` to 
+generate a pdf file of x sheets (user-specified number).
 
-To run this script, change to the `Bingo-Card-Maker` directory and run:
-$ python ./make_pdf x
-'x' is the number of sheets you want. If there aren't enough unique
-image files in `./bingo-cards`, an error will be raised.
+For more information, run:
+$ python3 Bingo-Card-Maker/make_pdf.py -h
 
 """
 
@@ -17,12 +15,27 @@ from pathlib import Path
 from reportlab.lib import pagesizes
 from reportlab.pdfgen import canvas
 
-OUT_FILE = "bingo-card-set.pdf"
 parser = argparse.ArgumentParser()
 
+parser.add_argument("-s", "--source", help=(
+                    "the name of the directory that contains the cards,  "
+                    "relative to 'Bingo-Card-Maker'; the default value "
+                    "is 'bingo-cards'."),
+                    default="bingo-cards", type=str)
+parser.add_argument("-o", "--output", help=(
+                    "the name of the output pdf file containing the cards; "
+                    "the default value is 'bingo-card-set.pdf'; "
+                    "it is placed in the 'Bingo-Card-Maker' directory"),
+                    default="bingo-card-set.pdf", type=str)
 parser.add_argument('sheets', type=int)
 
-card_dir = Path("./bingo-cards")
+parent_dir = Path(__file__).resolve().parent
+SAVE_PATH = parent_dir / parser.parse_args().output
+
+card_dir = parent_dir / parser.parse_args().source
+if not card_dir.exists(follow_symlinks=False):
+    raise FileNotFoundError(f"The directory '{card_dir}' does not exist.")
+
 card_pathnames = [pathname for pathname in card_dir.glob("*")
                   if pathname.name != ".placeholder"]
 
@@ -114,7 +127,7 @@ def create_card_set(number_of_sheets, cards_per_sheet=6,
         return
 
     # 2. make canvas and add card images to it
-    c = canvas.Canvas(OUT_FILE, pagesize=size)
+    c = canvas.Canvas(SAVE_PATH, pagesize=size)
     for n in range(0, number_of_sheets):
         try:  # use try-block so that a pdf is saved regardless of any errors
             paths = [""] * 6
@@ -137,7 +150,7 @@ def create_card_set(number_of_sheets, cards_per_sheet=6,
     # 3. save
     c.save()
 
-    print(f"***SUMMARY: {num_sheets_saved} sheets saved to `{OUT_FILE}`.***")
+    print(f"***SUMMARY: {num_sheets_saved} sheets saved to `{SAVE_PATH}`.***")
     if error_status != 0:
         raise error_status
 
