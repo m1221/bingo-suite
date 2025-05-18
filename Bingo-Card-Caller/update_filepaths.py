@@ -1,16 +1,10 @@
 #! /usr/bin/python3
 """
-The purpose of this script is to update the './code/filepaths.js' file used
-by the Bingo Caller browser app. the filepaths.js file contains an array of
-filepaths (type: String) that link to the Bingo images.
+The purpose of this script is to update 'Bingo-Card-Caller/code/filepaths.js' The filepaths.js file contains an array of filepaths (type: String)
+that link to the Bingo images.
 
-This script:
-    1. gets paths from a directory and writes them to ./code/filepaths.js
-        (default: PROJECT_ROOT/source-images/individual-icons)
-    2. MUST BE RUN from project root. Examples:
-        $ ./Bingo-Card-Caller/update_filespaths.py
-        $ ./Bingo-Card-Caller/update_filespaths.py --help
-        $ ./Bingo-Card-Caller/update_filespaths.py --source "./target_dir"
+To learn more, run:
+$ python3 Bingo-Card-Caller/update_filepaths.py
 
 """
 
@@ -21,33 +15,28 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-s", "--source", help=(
-                    "the path of the directory that contains the image icons "
-                    "to be displayed on the bingo cards; it must a descendant "
-                    "of the project root directory"), type=str)
+                    "the name of the directory that contains the image icons, "
+                    "relative to 'BingoSuite`; the default is "
+                    "'source-images/individual-icons'"),
+                    default="source-images/individual-icons", type=str)
 
+project_root = Path(__file__).resolve().parent.parent
+img_dir = project_root / parser.parse_args().source
+if not img_dir.exists(follow_symlinks=False):
+    raise FileNotFoundError(f"The directory '{img_dir}' does not exist.")
 
-def __get_source_dir__() -> Path:
-    """Get a directory"""
-    user_path = parser.parse_args().source
-    default_path = "./source-images/individual-icons"
-    source_dir = Path(default_path if user_path is None else user_path)
-
-    if not source_dir.exists():
-        raise FileExistsError(f"ERROR: '{source_dir}' does not exist.")
-
-    return source_dir
-
-
-with open("./Bingo-Card-Caller/code/filepaths.js", mode="w",
+with open(project_root / "Bingo-Card-Caller/code/filepaths.js", mode="w",
           encoding="utf-8") as outfile:
     # gather filepaths
-    raw_paths = list(__get_source_dir__().glob("[!.]*"))
+    raw_paths = list(img_dir.glob("[!.]*"))
 
     # compose the string to be written
     WRITE_OUT = "let filepaths = ["
 
     for path in raw_paths:
-        WRITE_OUT += "\n    '../../" + str(path) + "',"
+        temp_string = str(path)
+        pos = temp_string.find('BingoSuite')
+        WRITE_OUT += "\n    '../.." + temp_string[pos + 10:] + "',"
         # the root directory is located 2 levels up from filepaths.js
 
     WRITE_OUT = WRITE_OUT[:-1]  # clip the last comma

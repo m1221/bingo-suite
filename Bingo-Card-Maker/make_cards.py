@@ -6,7 +6,7 @@ This script makes 5x5 bingo cards (png format) from either local images or a
 user-specified number range.
 
 For usage information:
-$ python ./make_cards.py -h
+$ python3 Bingo-Card-Maker/make_cards.py -h
 """
 
 from pathlib import Path
@@ -46,12 +46,14 @@ parser.add_argument("-S", "--single_pool", help=(
                     action=argparse.BooleanOptionalAction)
 parser.add_argument("-s", "--source", help=(
                     "the path of the directory that contains the image icons "
-                    "to be displayed on the bingo cards"),
-                    default="../source-images/individual-icons", type=str)
+                    "to be displayed on the cards; relative to 'BingoSuite'."
+                    "The default is 'source-images/individual-icons'"),
+                    default="source-images/individual-icons", type=str)
 parser.add_argument("-o", "--output", help=(
-                    "directory where png cards are saved to; the default " 
-                    "directory is './bingo-cards'"),
-                    default="./bingo-cards", type=str)
+                    "the directory to which png cards are saved; "
+                    "the default value is 'bingo-cards', which creates the "
+                    "path '.../BingoSuite/Bingo-Card-Marker/bingo-cards'"),
+                    default="bingo-cards", type=str)
 parser.add_argument("-a", "--side_length",
                     help="size of a bingo square, default = 60",
                     default=60, type=int)
@@ -72,6 +74,11 @@ parser.add_argument("-Q", "--quiet_mode", help=(
                     "the script"), action=argparse.BooleanOptionalAction)
 
 args_in = parser.parse_args()
+script_dir = Path(__file__).resolve().parent
+SAVE_DIR = script_dir / args_in.output
+
+if not SAVE_DIR.exists(follow_symlinks=False):
+    raise FileExistsError(f"The directory '{SAVE_DIR}' could not be found.")
 
 
 def __load_font__(font_dir: str, font_size: int):
@@ -248,7 +255,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
                   width=line_thickness)
 
     # 8. Save the bingo card to a file
-    card.save(f'{args_in.output}/{serial_number}_bingo-card.png', 'PNG')
+    card.save(f'{SAVE_DIR}/{serial_number}_bingo-card.png', 'PNG')
 
 
 def __print_termination_message__(success: bool):
@@ -273,7 +280,7 @@ def __print_termination_message__(success: bool):
 
 try:
     if args_in.number_range is None:
-        image_dir = Path(args_in.source)
+        image_dir = script_dir.parent / args_in.source
         image_pathnames = list(image_dir.glob("[!.]*"))
 
     for serial_id in range(1, args_in.quantity + 1):
