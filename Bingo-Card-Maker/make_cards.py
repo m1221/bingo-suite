@@ -171,7 +171,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
     # 4. Draw the "BINGO" heading
     headers = ["B", "I", "N", "G", "O"]
     for i, letter in enumerate(headers):
-        x = i * side_length + (side_length - draw.textsize(letter, font=header_font)[0]) // 2
+        x = i * side_length + (side_length - draw.textlength(letter, font=header_font)[0]) // 2
         draw.text((x, 2), letter, fill='black', font=header_font)
 
     # 5. make selection pools
@@ -208,7 +208,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
                 draw.rectangle([x, y, x + side_length, y + side_length],
                                fill=(255, 255, 255, 255))
                 text = "FREE"
-                text_size = draw.textsize(text, font=font)
+                text_size = draw.textlength(text, font=font)
                 draw.text((x + (side_length - text_size[0]) // 2,
                            y + (side_length - text_size[1]) // 2),
                            text, fill='black', font=font)
@@ -216,7 +216,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
 
             if number_range:
                 number_to_write = selection_pool.pop()
-                text_size = draw.textsize(number_to_write, font=number_font)
+                text_size = draw.textlength(number_to_write, font=number_font)
                 x_pos = x + (side_length - text_size[0]) // 2
                 y_pos = y + (side_length - text_size[1]) // 2
                 draw.text((x_pos, y_pos), number_to_write, fill='black',
@@ -240,7 +240,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
                 if args_in.words:
                     text = __get_display_name__(img_path)
                     text_font = box_font_small if len(text) > 10 else box_font
-                    text_size = draw.textsize(text, font=text_font)
+                    text_size = draw.textlength(text, font=text_font)
                     x_pos = x + (side_length - text_size[0]) // 2
                     y_pos = y + (side_length - text_size[1]) * 19 // 20
                     draw.text((x_pos, y_pos), text, fill='black', font=text_font)
@@ -261,7 +261,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
     card.save(f'{SAVE_DIR}/{serial_number}_bingo-card.png', 'PNG')
 
 
-def __print_termination_message__(success: bool):
+def __print_termination_message__(success: bool = True):
     """Upon script termination, display user specifications."""
     result = "SUCCESS" if success else "FAILURE"
     make_mode = "Numbers" if args_in.number_range else "Images"
@@ -290,7 +290,11 @@ try:
         make_card(serial_id)
 
     if not args_in.quiet_mode:
-        __print_termination_message__(True)
+        __print_termination_message__()
 except Exception as e:
-    __print_termination_message__(False)
-    print(e)
+    __print_termination_message__(success=False)
+    if args_in.quiet_mode:
+        print("Error: ", e)
+    else:
+        print("Full Error Message:")
+        raise(e)
