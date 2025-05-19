@@ -14,9 +14,4 @@ This app suite is still heavily under construction. See TODO.txt for more inform
 
 # Dependencies
 
-Python 3.12.0 and the following libraries (which you can install with pip):
-
-* PIL
-    * `pip install pillow`
-* reportlab
-    * `pip install reportLab`
+`pip install -r requirements.txt`
