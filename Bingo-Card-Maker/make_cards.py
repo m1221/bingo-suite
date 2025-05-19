@@ -37,9 +37,8 @@ def __clamp_inner_image_scale__(arg: str) -> float:
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
 
-parser.add_argument("-q", "--quantity",
-                    help="the number of cards to generate\ndefault=4",
-                    default=4, type=int)
+parser.add_argument("quantity", type=int,
+                    help="the number of cards to generate")
 parser.add_argument("-S", "--single_pool", help=(
                     "if set, items are pulled from a single pool\nby "
                     "default, items are pulled from MULTIPLE POOLS"
@@ -73,10 +72,11 @@ parser.add_argument("-Q", "--quiet_mode", help=(
                     "if set, silence the completion message at the end of "
                     "the script"), action=argparse.BooleanOptionalAction)
 
-args_in = parser.parse_args()
 if len(sys.argv)==1:
     parser.print_help(sys.stderr)
     sys.exit(1)
+
+args_in = parser.parse_args()
 script_dir = Path(__file__).resolve().parent
 SAVE_DIR = script_dir / args_in.output
 
