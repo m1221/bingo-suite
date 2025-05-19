@@ -34,41 +34,40 @@ def __clamp_inner_image_scale__(arg: str) -> float:
     return f
 
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
 
 parser.add_argument("-q", "--quantity",
-                    help="the number of cards to generate; default=4",
+                    help="the number of cards to generate\ndefault=4",
                     default=4, type=int)
 parser.add_argument("-S", "--single_pool", help=(
-                    "if set, items are pulled from a single pool; by "
+                    "if set, items are pulled from a single pool\nby "
                     "default, items are pulled from MULTIPLE POOLS"
                     "(one pool for each letter of 'BINGO')"),
                     action=argparse.BooleanOptionalAction)
 parser.add_argument("-s", "--source", help=(
-                    "the path of the directory that contains the image icons "
-                    "to be displayed on the cards; relative to 'BingoSuite'."
-                    "The default is 'source-images/individual-icons'"),
+                    "the path of the dir that contains the image icons "
+                    "for the cards, relative to 'BingoSuite'."
+                    "\nThe default is 'source-images/individual-icons'"),
                     default="source-images/individual-icons", type=str)
 parser.add_argument("-o", "--output", help=(
-                    "the directory to which png cards are saved; "
-                    "the default value is 'bingo-cards', which creates the "
-                    "path '.../BingoSuite/Bingo-Card-Marker/bingo-cards'"),
+                    "the directory to which png cards are saved, relative to "
+                    "'Bingo-Card-Maker'\nthe default is 'bingo-cards'"),
                     default="bingo-cards", type=str)
 parser.add_argument("-a", "--side_length",
-                    help="size of a bingo square, default = 60",
+                    help="size of a bingo square\ndefault = 60",
                     default=60, type=int)
 parser.add_argument("-i", "--inner_image_scale", help=(
                     "the percent of a bingo space that the image should "
-                    "fill; clamped from 0.5 to 1.0; default = 1.0"),
+                    "fill; clamped from 0.5 to 1.0\ndefault = 1.0"),
                     default=1.0, type=__clamp_inner_image_scale__)
 parser.add_argument("-w", "--words", help=(
                     "writes words extracted from the image filenames onto "
-                    "the bottoms of the bingo spaces; by default, no words " 
+                    "the bottoms of the bingo spaces\nby default, no words " 
                     "appear on bingo spaces"),
                     action=argparse.BooleanOptionalAction)
 parser.add_argument("-n", "--number_range", help=(
-                    "if set, uses numbers instead of images; enter the range, "
+                    "if set, uses numbers instead of images\nenter a range: "
                     "eg `-n 1-50`"), type=str)
 parser.add_argument("-Q", "--quiet_mode", help=(
                     "if set, silence the completion message at the end of "

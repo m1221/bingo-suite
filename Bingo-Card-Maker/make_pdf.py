@@ -16,19 +16,20 @@ from pathlib import Path
 from reportlab.lib import pagesizes
 from reportlab.pdfgen import canvas
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
 parser.add_argument("-s", "--source", help=(
-                    "the name of the directory that contains the cards,  "
-                    "relative to 'Bingo-Card-Maker'; the default value "
+                    "the name of the directory that contains the cards, "
+                    "relative to 'Bingo-Card-Maker'\nthe default value "
                     "is 'bingo-cards'."),
                     default="bingo-cards", type=str)
 parser.add_argument("-o", "--output", help=(
-                    "the name of the output pdf file containing the cards; "
+                    "the name of the output pdf file containing the cards \n"
                     "the default value is 'bingo-card-set.pdf'; "
                     "it is placed in the 'Bingo-Card-Maker' directory"),
                     default="bingo-card-set.pdf", type=str)
-parser.add_argument('sheets', type=int)
+parser.add_argument('sheets', type=int,
+                    help=("the number of sheets to produce"))
 
 if len(sys.argv)==1:
     parser.print_help(sys.stderr)
