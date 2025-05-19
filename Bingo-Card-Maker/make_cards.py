@@ -62,8 +62,9 @@ parser.add_argument("-i", "--inner_image_scale", help=(
                     default=1.0, type=__clamp_inner_image_scale__)
 parser.add_argument("-w", "--words", help=(
                     "writes words extracted from the image filenames onto "
-                    "the bottoms of the bingo spaces\nby default, no words " 
-                    "appear on bingo spaces"),
+                    "the bottoms of the bingo spaces"
+                    "\nby default, no words appear on bingo spaces"
+                    "\nNOTE: feature is still under development"),
                     action=argparse.BooleanOptionalAction)
 parser.add_argument("-n", "--number_range", help=(
                     "if set, uses numbers instead of images\nenter a range: "
@@ -171,7 +172,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
     # 4. Draw the "BINGO" heading
     headers = ["B", "I", "N", "G", "O"]
     for i, letter in enumerate(headers):
-        x = i * side_length + (side_length - draw.textlength(letter, font=header_font)[0]) // 2
+        x = i * side_length + (side_length - draw.textlength(letter, font=header_font)) // 2
         draw.text((x, 2), letter, fill='black', font=header_font)
 
     # 5. make selection pools
@@ -209,16 +210,16 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
                                fill=(255, 255, 255, 255))
                 text = "FREE"
                 text_size = draw.textlength(text, font=font)
-                draw.text((x + (side_length - text_size[0]) // 2,
-                           y + (side_length - text_size[1]) // 2),
+                draw.text((x + (side_length - text_size) // 2,
+                           y + (side_length - text_size) // 2),
                            text, fill='black', font=font)
                 continue
 
             if number_range:
                 number_to_write = selection_pool.pop()
                 text_size = draw.textlength(number_to_write, font=number_font)
-                x_pos = x + (side_length - text_size[0]) // 2
-                y_pos = y + (side_length - text_size[1]) // 2
+                x_pos = x + (side_length - text_size) // 2
+                y_pos = y + (side_length - text_size) // 2
                 draw.text((x_pos, y_pos), number_to_write, fill='black',
                           font=number_font)
             else:
@@ -229,7 +230,7 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
                 scale_factor = args_in.inner_image_scale
                 scaled_length = round(side_length * scale_factor)
                 img = img.resize((scaled_length, scaled_length),
-                                 Image.ANTIALIAS)
+                                 Image.LANCZOS)
 
                 # Create a mask for pasting
                 offset = round(side_length * (1 - scale_factor) / 2)
@@ -241,8 +242,8 @@ def make_card(card_id: int, side_length: int = args_in.side_length,
                     text = __get_display_name__(img_path)
                     text_font = box_font_small if len(text) > 10 else box_font
                     text_size = draw.textlength(text, font=text_font)
-                    x_pos = x + (side_length - text_size[0]) // 2
-                    y_pos = y + (side_length - text_size[1]) * 19 // 20
+                    x_pos = x + (side_length - text_size) // 2
+                    y_pos = y + (side_length - text_size) * 19 // 20
                     draw.text((x_pos, y_pos), text, fill='black', font=text_font)
 
     # 7. Draw grid lines
