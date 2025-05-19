@@ -133,7 +133,7 @@ def create_card_set(number_of_sheets, cards_per_sheet=6,
         return
 
     # 2. make canvas and add card images to it
-    c = canvas.Canvas(SAVE_PATH, pagesize=size)
+    c = canvas.Canvas(str(SAVE_PATH), pagesize=size)
     for n in range(0, number_of_sheets):
         try:  # use try-block so that a pdf is saved regardless of any errors
             paths = [""] * 6
