@@ -1,7 +1,4 @@
 In no order of priority:
-1. make more user-friendly 
-	- establish pre-defined formats for card printouts
-2. add app for odds calculation
+1. add app for odds calculation
     - this will require a dive into stats
-3. add a thorough readme for usage instructions
-4. make all scripts callable from anywhere, not just directories of scripts
+2. continue polishing and bug-fixing

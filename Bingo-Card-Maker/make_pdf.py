@@ -22,7 +22,7 @@ parser.add_argument('sheets', type=int,
                     help=("the number of sheets to produce"))
 parser.add_argument('spec', type=str,
                     help=(
-                    "Select from a form factor, orientation, and card/sheet combination"
+                    "Select from a page size, orientation, and card/sheet combination"
                     "\n 1 - Letter (216 x 279mm) Landscape, 2 cards per sheet"
                     "\n 2 - Letter (216 x 279mm) Portrait, 1 card per sheet"
                     "\n 3 - ANSI C (432 x 559mm) Landscape, 6 cards per sheet"
