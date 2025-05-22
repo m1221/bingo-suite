@@ -74,7 +74,7 @@ def create_sheet_with_1_card(c: canvas, page_width : float, page_height : float,
 def create_sheet_with_2_cards(c: canvas, page_width : float, page_height : float, *img_paths):
     """Makes a page with two bingo cards ('landscape' orientation). """
     card_height = (page_height - MARGIN * 2)
-    card_width = (page_width - MARGIN * 3) / 2
+    card_width = (page_width - MARGIN * 4) / 2
     # 1. set the positions to place the images
     x1 = MARGIN  # X coordinate (left-right)
     x2 = x1 + card_width + MARGIN * 2 
