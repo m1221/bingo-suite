@@ -10,20 +10,16 @@ $ python3 Bingo-Card-Caller/update_filepaths.py
 
 from pathlib import Path
 import argparse
-import sys
 
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
 parser.add_argument("-s", "--source", help=(
                     "the name of the directory that contains the image icons, "
-                    "relative to 'BingoSuite`; the default is "
-                    "'source-images/individual-icons'"),
+                    "relative to 'BingoSuite`"
+                    "\nthe default is 'source-images/individual-icons'"),
                     default="source-images/individual-icons", type=str)
 
-if len(sys.argv)==1:
-    parser.print_help(sys.stderr)
-    sys.exit(1)
 
 project_root = Path(__file__).resolve().parent.parent
 img_dir = project_root / parser.parse_args().source
