@@ -181,8 +181,10 @@ def create_card_set(num_sheets : int, specification : str = "0") -> None:
     # 3. save
     c.save()
 
-    print("***SUMMARY***")
-    print(f"{num_sheets_saved} sheets saved to `{SAVE_PATH}`.***")
+    print("*** SUMMARY ***")
+    print(f"Number of sheets saved: {num_sheets_saved}")
+    print(f"Cards per sheet: {cards_per_sheet}")
+    print(f"Location: {SAVE_PATH}")
     if error_status != 0:
         raise error_status
 
