@@ -18,6 +18,18 @@ from reportlab.pdfgen import canvas
 
 parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
+parser.add_argument('sheets', type=int,
+                    help=("the number of sheets to produce"))
+parser.add_argument('spec', type=str,
+                    help=(
+                    "Select from a form factor, orientation, and card/sheet combination"
+                    "\n 1 - Letter (216 x 279mm) Landscape, 2 cards per sheet"
+                    "\n 2 - Letter (216 x 279mm) Portrait, 1 card per sheet"
+                    "\n 3 - ANSI C (432 x 559mm) Landscape, 6 cards per sheet"
+                    "\n 4 - A4 (210 x 297mm) Landscape, 2 cards per sheet"
+                    "\n 5 - A4 (210 x 297mm) Portrait, 1 card per sheet"
+                    "\n 6 - A2 (420 x 594mm) Landscape, 6 pages per sheet"
+                    "\n 7 - 4K (390 x 540mm) Landscape, 6 pages per sheet"))
 parser.add_argument("-s", "--source", help=(
                     "the name of the directory that contains the cards, "
                     "relative to 'Bingo-Card-Maker'\nthe default value "
@@ -28,8 +40,6 @@ parser.add_argument("-o", "--output", help=(
                     "the default value is 'bingo-card-set.pdf'; "
                     "it is placed in the 'Bingo-Card-Maker' directory"),
                     default="bingo-card-set.pdf", type=str)
-parser.add_argument('sheets', type=int,
-                    help=("the number of sheets to produce"))
 
 if len(sys.argv)==1:
     parser.print_help(sys.stderr)
@@ -45,106 +55,121 @@ if not card_dir.exists(follow_symlinks=False):
 card_pathnames = [pathname for pathname in card_dir.glob("*")
                   if pathname.name != ".placeholder"]
 
+MARGIN = 25
 
-def get_paper_size(page_size: str, orientation: str) -> tuple[float]:
-    """Returns the dimensions of the paper (H, W) in millimeters.
-
-    Parameters
-    ----------
-    page_size : str
-        supports "prc8k", "letter", and "a4"
-    orientation : str
-        supports "landscape" and "portrait"
-    """
-    # 1. Sanitize arguments
-    page_size = page_size.lower()
-    orientation = orientation.lower()
-
-    # 2. get dimensions
-    if page_size == "prc8k":
-        size = (748.44, 1065.96)
-    elif page_size == "letter":
-        size = pagesizes.letter
-    elif page_size == "a4":
-        size = pagesizes.A4
-    else:
-        raise ValueError("Unsupported page size. Use 'letter', 'a4', or 'prc8k'.")
-
-    # 3. Adjust orientation
-    if orientation == "landscape":
-        size = pagesizes.landscape(size)
-    elif orientation == "portrait":
-        size = pagesizes.portrait(size)
-    else:
-        raise ValueError("Unsupported orientation. Use 'landscape' or 'portrait'.")
-    return size
-
-
-def create_card_pair(canvas_in: canvas, img_path_1: str, img_path_2: str):
-    """Makes a page with two bingo cards."""
+def create_sheet_with_1_card(c: canvas, page_width : float, page_height : float, img_path):
+    """Makes a page with one bingo cards ('portrait' orientation). """
+    card_height = (page_height - MARGIN * 2)
+    card_width = (page_width - MARGIN * 2)
     # 1. set the positions to place the images
-    x1 = 75  # X coordinate (left-right)
-    x2 = 607.98
-    y = 100  # Y coordinate
+    x = MARGIN  # X coordinate (left-right)
+    y = MARGIN  # Y coordinate
 
     # 2. draw the PNG image
-    canvas_in.drawImage(img_path_1, x1, y)
-    canvas_in.drawImage(img_path_2, x2, y)
+    c.drawImage(img_path, x, y, card_width, card_height)
 
     # 3. finish the page
-    canvas_in.showPage()
+    c.showPage()
+
+def create_sheet_with_2_cards(c: canvas, page_width : float, page_height : float, *img_paths):
+    """Makes a page with two bingo cards ('landscape' orientation). """
+    card_height = (page_height - MARGIN * 2)
+    card_width = (page_width - MARGIN * 3) / 2
+    # 1. set the positions to place the images
+    x1 = MARGIN  # X coordinate (left-right)
+    x2 = x1 + MARGIN + card_width
+    y = MARGIN  # Y coordinate
+
+    # 2. draw the PNG image
+    c.drawImage(img_paths[0], x1, y, card_width, card_height)
+    c.drawImage(img_paths[1], x2, y, card_width, card_height)
+
+    # 3. finish the page
+    c.showPage()
 
 
-def create_card_hex(c, *img_paths):
-    """Makes a page with 6 bingo cards."""
+def create_sheet_with_6_cards(c : canvas, page_width : float, page_height : float, *img_paths):
+    """Makes a page with 6 bingo cards ('landscape' orientation). """
+    card_height = (page_height - MARGIN * 3) / 2
+    card_width = (page_width - MARGIN * 4) / 3
     # 1. Set the position to place the image
-    x_thirdway_point = 355
-    y_halfway_point = 374.22
-    x1 = 25  # X coordinate (left-right)
-    x2 = x1 + x_thirdway_point
-    x3 = x2 + x_thirdway_point
-    y1 = 25  # Y coordinate
-    y2 = 10 + y_halfway_point
+    x1 = MARGIN  # X coordinate (left-right)
+    x2 = x1 + card_width + MARGIN
+    x3 = x2 + card_width + MARGIN
+    y1 = MARGIN  # Y coordinate
+    y2 = y1 + card_height + MARGIN
 
     # 2. Draw the PNG image
-    c.drawImage(img_paths[0], x1, y1)  # bottom-left
-    c.drawImage(img_paths[1], x1, y2)  # top-left
-    c.drawImage(img_paths[2], x2, y1)  # bottom-middle
-    c.drawImage(img_paths[3], x2, y2)  # top-middle
-    c.drawImage(img_paths[4], x3, y1)  # bottom-right
-    c.drawImage(img_paths[5], x3, y2)  # top-right
+    c.drawImage(img_paths[0], x1, y1, card_width, card_height)  # bottom-left
+    c.drawImage(img_paths[1], x1, y2, card_width, card_height)  # top-left
+    c.drawImage(img_paths[2], x2, y1, card_width, card_height)  # bottom-middle
+    c.drawImage(img_paths[3], x2, y2, card_width, card_height)  # top-middle
+    c.drawImage(img_paths[4], x3, y1, card_width, card_height)  # bottom-right
+    c.drawImage(img_paths[5], x3, y2, card_width, card_height)  # top-right
 
     # 3. Finish Page
     c.showPage()
 
 
-def create_card_set(number_of_sheets, cards_per_sheet=6,
-                    page_size="PRC8K", orientation="landscape"):
-    """Makes a pdf according to the argument specifications."""
+def create_card_set(num_sheets : int, specification : str = "0") -> None:
+    """
+    """
+    # CONVERSION FACTOR
+    CF = 72 / 25.4  # convert from mm to reportlab unit
+
+    create_card = create_sheet_with_6_cards
+
+    match specification:
+        case "1":
+            page_size = pagesizes.letter
+            page_size = pagesizes.landscape(page_size)
+            cards_per_sheet = 2
+            create_card = create_sheet_with_2_cards
+        case "2":
+            page_size = pagesizes.letter
+            page_size = pagesizes.portrait(page_size)
+            cards_per_sheet = 1
+            create_card = create_sheet_with_1_card
+        case "3":
+            # ANSI C Size
+            page_size = (432 * CF, 559 * CF)
+            page_size = pagesizes.landscape(page_size)
+            cards_per_sheet = 6
+            create_card = create_sheet_with_6_cards
+        case "4":
+            page_size = pagesizes.A4
+            page_size = pagesizes.landscape(page_size)
+            cards_per_sheet = 2
+            create_card = create_sheet_with_2_cards
+        case "5":
+            page_size = pagesizes.A4
+            page_size = pagesizes.portrait(page_size)
+            cards_per_sheet = 1
+            create_card = create_sheet_with_1_card
+        case "6":
+            page_size = pagesizes.A2
+            page_size = pagesizes.landscape(page_size)
+            cards_per_sheet = 6
+            create_card = create_sheet_with_6_cards
+        case "7":
+            # 4K (large paper commonly used in Chinese schools)
+            page_size = (390 * CF, 549 * CF)
+            page_size = pagesizes.landscape(page_size)
+            cards_per_sheet = 6
+            create_card = create_sheet_with_6_cards
+        case _:
+            raise ValueError(f"'{specification}' not recognized. Please enter a valid selection.")
 
     num_sheets_saved = 0
     error_status = 0  # use for error recording
 
-    # 1. get size with applied orientation
-    size = get_paper_size(page_size, orientation)
-
-    if cards_per_sheet != 6:
-        print("oops, unable to fit that number of cards on a sheet")
-        return
-
     # 2. make canvas and add card images to it
-    c = canvas.Canvas(str(SAVE_PATH), pagesize=size)
-    for n in range(0, number_of_sheets):
+    c = canvas.Canvas(str(SAVE_PATH), pagesize=page_size)
+    for n in range(0, num_sheets):
         try:  # use try-block so that a pdf is saved regardless of any errors
-            paths = [""] * 6
-            base_index = 6 * n
-            paths[0] = card_pathnames[base_index]
-            paths[1] = card_pathnames[base_index + 1]
-            paths[2] = card_pathnames[base_index + 2]
-            paths[3] = card_pathnames[base_index + 3]
-            paths[4] = card_pathnames[base_index + 4]
-            paths[5] = card_pathnames[base_index + 5]
-            create_card_hex(c, *tuple(paths))
+            base_index = n * cards_per_sheet
+            paths = [card_pathnames[base_index + i] for i in range(cards_per_sheet)]
+            create_card(c, page_size[0], page_size[1], *tuple(paths))
             num_sheets_saved += 1
         except IndexError as index_error:
             error_status = index_error
@@ -156,9 +181,10 @@ def create_card_set(number_of_sheets, cards_per_sheet=6,
     # 3. save
     c.save()
 
-    print(f"***SUMMARY: {num_sheets_saved} sheets saved to `{SAVE_PATH}`.***")
+    print("***SUMMARY***")
+    print(f"{num_sheets_saved} sheets saved to `{SAVE_PATH}`.***")
     if error_status != 0:
         raise error_status
 
 
-create_card_set(parser.parse_args().sheets)
+create_card_set(parser.parse_args().sheets, parser.parse_args().spec)
