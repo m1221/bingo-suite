@@ -12,7 +12,7 @@ Bingo Suite includes three scripts:
 2. `make_pdf.py` : Gather the bingo cards made with `make_cards.py` and produce a PDF document.
 <img src="doc-images/screenshot_make_pdf.jpg" width="600px">
 
-1. `update_filepaths.py` : Update the image filepaths used in bingo-caller.html.
+3. `update_filepaths.py` : Update the image filepaths used in bingo-caller.html.
 <img src="doc-images/screenshot_update_filepaths.jpg" width="600px">
 
 
