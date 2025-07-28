@@ -17,6 +17,7 @@ Bingo Suite includes three scripts:
 
 
 # Dependencies
+This app has been tested with Python 3.12.3.
 
 Best practice is to use Python virtual environments.
 
