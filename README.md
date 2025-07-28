@@ -1,20 +1,19 @@
 # About Bingo Suite
+You can use Bingo Suite to:
+* Make Bingo card PDFs.
+* Play Bingo with a browser app.
 
-Make Bingo card PDFs and play bingo with the browser app.
-
+# Usage
 Bingo Suite includes three scripts:
 
-1. `update_filepaths.py`
-  * updates Bingo-Card-Caller/code/filepaths.js for the browser app (bingo-caller.html)
-  * <img src="doc-images/screenshot_update_filepaths.jpg" width="600px">
+1. `make_cards.py` : Make bingo cards, in png format, from either a user-defined number range *OR* from a directory with png files.
+<img src="doc-images/screenshot_make_cards.jpg" width="600px">
 
-2. `make_cards.py`
-  * makes bingo cards from png files OR from a user-defined number range
-  * <img src="doc-images/screenshot_make_cards.jpg" width="600px">
+2. `make_pdf.py` : Gather the bingo cards made with `make_cards.py` and produce a PDF document.
+<img src="doc-images/screenshot_make_pdf.jpg" width="600px">
 
-3. `make_pdf.py`
-  * gathers bingo cards and prints them to pdf
-  * <img src="doc-images/screenshot_make_pdf.jpg" width="600px">
+1. `update_filepaths.py` : Update the image filepaths used in bingo-caller.html.
+<img src="doc-images/screenshot_update_filepaths.jpg" width="600px">
 
 
 # Dependencies
@@ -28,28 +27,38 @@ pip install -r requirements.txt
 
 # Examples
 
-## Making a Card
+***NOTE:*** For help with a command, use the `h` flag to bring up a help menu.
 ```bash
-# `python3 make_cards.py -h` for help
+# example
+$ python3 bingo_cmd -h
+```
+
+## i. Making a Card
+```bash
 # python3 make_cards.py number_of_cards
-$ python3 make_cards.py 1  # produce a single card
+# produce a single card
+$ python3 make_cards.py 1  
 ```
 
 <img src="doc-images/screenshot_sample_card.jpg" width="auto" height="300px">
 
-## Make a Sheet
+## ii. Make a PDF
 
 ```bash
-# `python3 make_pdf.py -h` for help
 # python3 make_pdf.py number_of_sheets form_factor
 $ python3 make_pdf.py 1 1
 ```
+The form factor `1` corresponds to the following specification: \
+*1 - Letter (216 x 279mm) Landscape, 2 cards per sheet*.
+
+Use `python3 make_pdf.py -h` to learn more about the available form factors.
+
 <img src="doc-images/screenshot_sample_sheet.jpg" width="auto" height="300px">
 
-## Using the Card Caller
+## iii. Using the Card Caller
 
-Run `Bingo_Card-Caller/update_filepaths.py` to update the filepaths that will be used by the browser app.
+Run `update_filepaths.py` to update the filepaths that will be used by the browser app.
 
-Open the browser app at `Bingo_Card-Caller/code/bingo-caller.html`
+Open the browser app at *Bingo_Card-Caller/code/bingo-caller.html*.
 
 <img src="doc-images/screenshot_browser.jpg" width="auto" height="400px">
